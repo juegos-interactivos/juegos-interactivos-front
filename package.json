@@ -1,0 +1,19 @@
+{
+  "name": "juegos-interactivos-front",
+  "version": "1.0.0",
+  "description": "Proyecto front de juegos-interactivos",
+  "author": "Eduard",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.12.3"
+  }
+}
