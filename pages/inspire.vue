@@ -10,6 +10,7 @@
         &#8220;First, solve the problem. Then, write the code.&#8221;
         <footer>
           <small>
+            <h1>{{$t('welcome')}}</h1>
             <em>&mdash;John Johnson</em>
           </small>
         </footer>

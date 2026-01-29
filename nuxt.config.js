@@ -41,6 +41,7 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/i18n',
   ],
   /*
   ** vuetify module configuration
@@ -61,6 +62,32 @@ export default {
           warning: '#FB8C00',
         }
       }
+    }
+  },
+  i18n: {
+    // Idiomas soportados
+    locales: [
+      {
+        code: 'es',
+        iso: 'es-ES',
+        file: 'es.js',
+        name: 'Español'
+      },
+      {
+        code: 'en',
+        iso: 'en-US',
+        file: 'en.js',
+        name: 'English'
+      }
+    ],
+    lazy: true,
+    langDir: 'locales/',
+    defaultLocale: 'es',
+    strategy: 'prefix_except_default',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root',
     }
   },
   /*
