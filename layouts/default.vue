@@ -35,6 +35,9 @@
         <v-btn text class="black--text font-weight-bold text-h5 text-none px-2" to="/perfil">
           Perfil
         </v-btn>
+        <v-btn text class="black--text font-weight-bold text-h5 text-none px-2" to="/login">
+          Inicia Sesión
+        </v-btn>
       </v-sheet>
     </v-app-bar>
 
