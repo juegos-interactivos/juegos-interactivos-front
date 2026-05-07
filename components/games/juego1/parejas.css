@@ -1,0 +1,89 @@
+body {
+    background: green;
+    font-family: sans-serif;
+    color: white;
+}
+
+/* Estilo simple para el menú y contadores */
+#menu, #info {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+#info {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 1.2rem;
+}
+
+button {
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background: #333;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #555;
+}
+
+#btn-reiniciar {
+    background: #e74c3c;
+    margin-left: 15px;
+}
+
+.tablero {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center; /* Centra las cartas */
+    padding: 20px;
+    margin: 0 auto;
+    /* El max-width se lo daremos por JS según la dificultad */
+}
+
+.tarjeta {
+    width: 150px;
+    height: 200px;
+    perspective: 1000px;
+    position: relative;
+    cursor: pointer; 
+    flex: 0 0 auto;
+}
+
+/* --- Tu diseño original se mantiene intacto --- */
+.frontal, .trasera {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    transition: transform 1s ease;
+    border: 6px solid #333;
+}
+.trasera img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.frontal { background-color: #e74c3c; }
+.trasera { background-color: white; transform: rotateY(180deg); }
+.tarjeta.clicked .frontal { transform: rotateY(180deg); }
+.tarjeta.clicked .trasera { transform: rotateY(360deg); }
+
+button.activo {
+    background-color: #2980b9 !important; /* Azul */
+    border: 2px solid white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
