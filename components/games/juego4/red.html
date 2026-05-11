@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="red.css" type="text/css" rel="stylesheet">
+    <title>Conector de Red</title>
+</head>
+<body>
+    <div id="menu">
+        <button onclick="ajustarDificultad('1')">Fácil</button>
+        <button onclick="ajustarDificultad('2')">Normal</button>
+        <button onclick="ajustarDificultad('3')">Difícil</button>
+        <button id="btn-reiniciar" onclick="reiniciarJuego()">Nueva Red</button>
+    </div>
+
+    <div id="info">
+        <span>Tiempo: <b id="tiempo">0</b>s</span>
+        <span>Movimientos: <b id="movimientos">0</b></span>
+        <span>Puntos: <b id="puntos">0</b></span>
+    </div>
+
+    <div id="contenedor-juego">
+        <div id="entrada" class="nodo-extremo">IN</div>
+        <div id="tablero" class="tablero"></div>
+        <div id="salida" class="nodo-extremo">OUT</div>
+    </div>
+
+    <script src="red.js"></script>
+</body>
+</html>

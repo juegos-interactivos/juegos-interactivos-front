@@ -1,0 +1,80 @@
+body {
+    background: #1e272e;
+    font-family: monospace, sans-serif;
+    color: white;
+    user-select: none;
+}
+
+#menu, #info { text-align: center; margin-bottom: 10px; padding: 10px; }
+#info { background: rgba(0, 0, 0, 0.4); border-radius: 8px; display: flex; justify-content: center; gap: 30px; font-size: 1.2rem; }
+
+button { padding: 8px 15px; cursor: pointer; border-radius: 5px; border: none; background: #333; color: white; font-weight: bold; }
+button:hover { background: #555; }
+#btn-reiniciar { background: #e74c3c; margin-left: 15px; }
+button.activo { background-color: #0fb9b1 !important; border: 2px solid white; }
+
+#contenedor-juego {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.nodo-extremo {
+    background: #333;
+    padding: 20px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #808e9b;
+    border: 2px solid #808e9b;
+}
+.nodo-extremo.activo {
+    color: #0fb9b1;
+    border-color: #0fb9b1;
+    box-shadow: 0 0 10px #0fb9b1;
+}
+
+.tablero {
+    display: grid;
+    gap: 2px;
+    background: #333; /* Color de las líneas separadoras */
+    padding: 2px;
+    border-radius: 5px;
+}
+
+/* --- DIBUJO DE LOS CABLES (PIEZAS) --- */
+.celda {
+    width: 70px;
+    height: 70px;
+    background: #2d3436;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease-out; /* Animación de giro */
+}
+
+/* El "centro" del cable */
+.celda::after {
+    content: ''; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 20px; height: 20px; background: #808e9b; border-radius: 50%;
+}
+
+/* Los "brazos" del cable */
+.brazo {
+    position: absolute;
+    background: #808e9b;
+}
+
+/* Posicionamiento de los brazos según la dirección: 0=Arriba, 1=Derecha, 2=Abajo, 3=Izquierda */
+.dir-0 { top: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 50%; }
+.dir-1 { top: 50%; right: 0; transform: translateY(-50%); width: 50%; height: 20px; }
+.dir-2 { bottom: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 50%; }
+.dir-3 { top: 50%; left: 0; transform: translateY(-50%); width: 50%; height: 20px; }
+
+/* ESTADO CONECTADO (Energía fluyendo) */
+.celda.conectado::after,
+.celda.conectado .brazo {
+    background: #0fb9b1;
+    box-shadow: 0 0 8px #0fb9b1;
+}
