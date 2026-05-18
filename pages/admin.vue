@@ -45,7 +45,7 @@
               </v-chip>
             </template>
             <template v-slot:[`item.acciones`]="{ item }">
-              <v-btn icon small class="mr-2" @click="editarUsuario(item)">
+              <v-btn icon small class="mr-2" @click="abrirEditorUsuario(item)">
                 <v-icon color="black">mdi-pencil</v-icon>
               </v-btn>
               <v-btn icon small @click="banearUsuario(item)">
@@ -84,7 +84,7 @@
               </v-icon>
             </template>
             <template v-slot:[`item.acciones`]="{ item }">
-              <v-btn icon small class="mr-2" @click="editarJuego(item)">
+              <v-btn icon small class="mr-2" @click="abrirEditorJuego(item)">
                 <v-icon color="black">mdi-pencil</v-icon>
               </v-btn>
               <v-btn icon small @click="eliminarJuego(item)">
@@ -95,48 +95,66 @@
         </v-tab-item>
       </v-tabs-items>
     </v-sheet>
+
+    <AdminDialogUsuario 
+      v-model="dialogUsuario" 
+      :usuario="usuarioSeleccionado" 
+      @guardar="actualizarUsuario" 
+    />
+
+    <AdminDialogJuego 
+      v-model="dialogJuego" 
+      :juego="juegoSeleccionado" 
+      @guardar="actualizarJuego" 
+    />
   </v-container>
 </template>
 
 <script>
 import Swal from 'sweetalert2';
+import AdminDialogUsuario from '@/components/AdminDialogUsuario.vue';
+import AdminDialogJuego from '@/components/AdminDialogJuego.vue';
 
 export default {
   name: 'AdminPanel',
+  components: {
+    AdminDialogUsuario,
+    AdminDialogJuego
+  },
   data() {
     return {
       tab: 0,
       searchUsuarios: '',
+      dialogUsuario: false,
+      dialogJuego: false,
+      usuarioSeleccionado: {},
+      juegoSeleccionado: {},
+      
       headersUsuarios: [
         { text: 'ID', value: 'id', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: 'NOMBRE', value: 'nombre', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: 'EMAIL', value: 'email', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: 'NIVEL', value: 'nivel', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'REGISTRO', value: 'fechaRegistro', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: 'ESTADO', value: 'estado', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: 'ACCIONES', value: 'acciones', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
       ],
       usuarios: [
-        { id: 1, nombre: 'NachoTrabaja', email: 'nacho@ejemplo.com', nivel: 12, fechaRegistro: '12/05/2021', estado: 'Activo' },
-        { id: 2, nombre: 'GamerPro99', email: 'gamerpro@ejemplo.com', nivel: 45, fechaRegistro: '01/02/2022', estado: 'Activo' },
-        { id: 3, nombre: 'ToxicPlayer', email: 'toxic@ejemplo.com', nivel: 8, fechaRegistro: '15/08/2023', estado: 'Baneado' },
-        { id: 4, nombre: 'SpeedRunner', email: 'speed@ejemplo.com', nivel: 89, fechaRegistro: '30/11/2020', estado: 'Activo' },
-        { id: 5, nombre: 'NoobMaster', email: 'noob@ejemplo.com', nivel: 2, fechaRegistro: '10/01/2024', estado: 'Activo' }
+        { id: 1, nombre: 'NachoTrabaja', email: 'nacho@ejemplo.com', nivel: 12, estado: 'Activo' },
+        { id: 2, nombre: 'GamerPro99', email: 'gamerpro@ejemplo.com', nivel: 45, estado: 'Activo' },
+        { id: 3, nombre: 'ToxicPlayer', email: 'toxic@ejemplo.com', nivel: 8, estado: 'Baneado' }
       ],
+      
       headersJuegos: [
         { text: 'ID', value: 'id', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: 'BANNER', value: 'imagen', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: 'NOMBRE', value: 'nombre', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'RUTA', value: 'enlace', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: 'VISIBILIDAD', value: 'visible', class: 'text-subtitle-1 font-weight-bold black--text text-center', align: 'center' },
         { text: 'ACCIONES', value: 'acciones', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
       ],
       juegos: [
-        { id: 1, nombre: 'Buscaminas Pro', imagen: 'buscaminas.jpeg', enlace: '/juegos/buscaminas', visible: true },
-        { id: 2, nombre: 'Pokemon', imagen: 'pokemon.jpg', enlace: '/juegos/aventura', visible: true },
-        { id: 3, nombre: 'Pixel Runner', imagen: 'pixel-runner.png', enlace: '/juegos/runner', visible: true },
-        { id: 4, nombre: 'Sudoku Master', imagen: 'sudoku.png', enlace: '/juegos/sudoku', visible: false },
-        { id: 5, nombre: 'Tower Defense', imagen: 'tower.png', enlace: '/juegos/tower', visible: true }
+        { id: 1, nombre: 'Buscaminas Pro', imagen: 'buscaminas.jpeg', visible: true },
+        { id: 2, nombre: 'Pokemon', imagen: 'pokemon.jpg', visible: true },
+        { id: 3, nombre: 'Pixel Runner', imagen: 'pixel-runner.png', visible: false }
       ]
     }
   },
@@ -148,7 +166,16 @@ export default {
         return null;
       }
     },
-    editarUsuario(usuario) {
+    abrirEditorUsuario(usuario) {
+      this.usuarioSeleccionado = usuario;
+      this.dialogUsuario = true;
+    },
+    actualizarUsuario(datosNuevos) {
+      const index = this.usuarios.findIndex(u => u.id === datosNuevos.id);
+      if (index !== -1) {
+        this.$set(this.usuarios, index, datosNuevos);
+      }
+      Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Usuario actualizado', showConfirmButton: false, timer: 1500 });
     },
     banearUsuario(usuario) {
       const accion = usuario.estado === 'Activo' ? 'banear' : 'desbanear';
@@ -171,7 +198,16 @@ export default {
         }
       });
     },
-    editarJuego(juego) {
+    abrirEditorJuego(juego) {
+      this.juegoSeleccionado = juego;
+      this.dialogJuego = true;
+    },
+    actualizarJuego(datosNuevos) {
+      const index = this.juegos.findIndex(j => j.id === datosNuevos.id);
+      if (index !== -1) {
+        this.$set(this.juegos, index, datosNuevos);
+      }
+      Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Juego actualizado', showConfirmButton: false, timer: 1500 });
     },
     eliminarJuego(juego) {
       Swal.fire({
