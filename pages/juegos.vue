@@ -63,6 +63,7 @@ export default {
   name: 'PaginaJuegos',
   data() {
     return {
+      searchQuery: '',
       juegos: [
         { id: 1, nombre: 'Buscaminas Pro', imagen: 'buscaminas.jpeg', enlace: '/juegos/buscaminas', favorito: false, visible: true },
         { id: 2, nombre: 'Pokemon', imagen: 'pokemon.jpg', enlace: '/juegos/aventura', favorito: false, visible: true },
@@ -78,11 +79,26 @@ export default {
   },
   computed: {
     juegosOrdenados() {
-      return [...this.juegos].sort((a, b) => {
+      let lista = [...this.juegos];
+
+      if (this.searchQuery) {
+        const termino = this.searchQuery.toLowerCase();
+        lista = lista.filter(juego => juego.nombre.toLowerCase().includes(termino));
+      }
+
+      return lista.sort((a, b) => {
         if (a.favorito === b.favorito) return 0;
         return a.favorito ? -1 : 1;
       });
     }
+  },
+  mounted() {
+    this.$nuxt.$on('buscar-juego', (termino) => {
+      this.searchQuery = termino;
+    });
+  },
+  beforeDestroy() {
+    this.$nuxt.$off('buscar-juego');
   },
   methods: {
     marcarFavorito(id) {
@@ -153,9 +169,7 @@ export default {
   right: 12px;
 }
 
-/* === Efecto para el borde negro en el corazón rojo === */
 .corazon-marcado {
-  /* Le damos un trazo negro al texto/icono de 1.5px */
   -webkit-text-stroke: 1.5px black;
 }
 </style>
