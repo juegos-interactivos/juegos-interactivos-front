@@ -1,114 +1,161 @@
 <template>
-  <v-layout>
-    <v-flex class="text-center">
-      <img
-        src="/v.png"
-        alt="Vuetify.js"
-        class="mb-5"
+  <v-container fluid class="pa-4 pa-md-8">
+    <h2 class="text-h4 font-weight-bold mb-8 pl-2">Todos los juegos</h2>
+
+    <v-row>
+      <v-col
+        v-for="juego in juegosOrdenados"
+        :key="juego.id"
+        cols="12"
+        sm="6"
+        md="4"
+        class="pa-4"
       >
-      <blockquote class="blockquote">
-        &#8220;First, solve the problem. Then, write the code.&#8221;
-        <footer>
-          <small>
-            <h1>{{$t('welcome')}}</h1>
-            <em>&mdash;John Johnson</em>
-          </small>
-          <br>
-          <v-btn @click="mostrarAlerta">Probar Sweet Alert</v-btn>
-        </footer>
-      </blockquote>
-    </v-flex>
-  </v-layout>
+        <v-card
+          :to="juego.enlace"
+          class="rounded-xl game-card transparent"
+          elevation="0"
+        >
+          <v-sheet color="#9e9e9e" class="rounded-xl overflow-hidden shadow-custom relative-container">
+            <v-img 
+              :src="obtenerImagen(juego.imagen)" 
+              aspect-ratio="1.7778"
+            >
+              <v-btn
+                icon
+                class="action-btn visibility-btn"
+                @click.stop.prevent="toggleVisibilidad(juego.id)"
+              >
+                <v-icon size="28" color="black">
+                  {{ juego.visible ? 'mdi-eye' : 'mdi-eye-off' }}
+                </v-icon>
+              </v-btn>
+
+              <v-btn
+                icon
+                class="action-btn favorite-btn"
+                @click.stop.prevent="marcarFavorito(juego.id)"
+              >
+                <v-icon 
+                  size="32" 
+                  :color="juego.favorito ? '#ff3333' : 'black'"
+                  :class="{ 'corazon-marcado': juego.favorito }"
+                >
+                  {{ juego.favorito ? 'mdi-heart' : 'mdi-heart-outline' }}
+                </v-icon>
+              </v-btn>
+            </v-img>
+          </v-sheet>
+
+          <div class="text-center mt-3">
+            <span class="text-h6 font-weight-bold black--text">
+              {{ juego.nombre }}
+            </span>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {
-  methods: {
-    mostrarAlerta() {
-      this.$swal({
-        // Título con texto en degradado y tipografía impactante
-        title: '<span style="background: -webkit-linear-gradient(45deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8em; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">¡Nacho, Modo Dios!</span>',
-        
-        // Inyectamos CSS puro para animar los botones y darle efecto cristal al modal + el contenido
-        html: `
-          <style>
-            .swal2-popup.glass-popup {
-              background: rgba(15, 23, 42, 0.9) !important;
-              backdrop-filter: blur(10px) !important;
-              border: 1px solid rgba(79, 172, 254, 0.3) !important;
-              box-shadow: 0 0 50px rgba(79, 172, 254, 0.15) !important;
-              border-radius: 24px !important;
-              color: #fff !important;
-            }
-            .btn-neon-confirm {
-              background: linear-gradient(45deg, #00f2fe, #4facfe) !important;
-              border: none !important;
-              border-radius: 50px !important;
-              color: white !important;
-              padding: 12px 35px !important;
-              font-size: 1.1em !important;
-              font-weight: bold !important;
-              box-shadow: 0 8px 15px rgba(79, 172, 254, 0.4) !important;
-              transition: all 0.3s ease !important;
-              margin: 10px !important;
-              cursor: pointer;
-            }
-            .btn-neon-confirm:hover {
-              transform: translateY(-3px) scale(1.05) !important;
-              box-shadow: 0 15px 25px rgba(79, 172, 254, 0.6) !important;
-            }
-            .btn-neon-cancel {
-              background: transparent !important;
-              border: 2px solid #4facfe !important;
-              border-radius: 50px !important;
-              color: #4facfe !important;
-              padding: 10px 30px !important;
-              font-size: 1em !important;
-              font-weight: bold !important;
-              transition: all 0.3s ease !important;
-              margin: 10px !important;
-              cursor: pointer;
-            }
-            .btn-neon-cancel:hover {
-              background: rgba(79, 172, 254, 0.1) !important;
-              transform: translateY(-2px) !important;
-            }
-          </style>
-
-          <div style="margin-top: 10px;">
-            <p style="font-size: 1.2em; color: #e2e8f0; margin-bottom: 20px;">
-              El servidor te está llamando... 💻✨
-            </p>
-            <img src="https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif" style="border-radius: 15px; width: 100%; max-width: 280px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-bottom: 15px;" alt="Coding cat" />
-          </div>
-        `,
-        
-        // Desactivamos los estilos aburridos de Sweet Alert para usar nuestro CSS
-        buttonsStyling: false, 
-        showCancelButton: true,
-        confirmButtonText: '¡A picar código! 🚀',
-        cancelButtonText: '5 minutitos más... ☕',
-        
-        // Asignamos las clases CSS que creamos arriba
-        customClass: {
-          popup: 'glass-popup',
-          confirmButton: 'btn-neon-confirm',
-          cancelButton: 'btn-neon-cancel'
-        },
-        
-        // El backdrop (fondo detrás de la alerta) súper loco
-        backdrop: `
-          rgba(0, 0, 0, 0.85)
-          url("https://sweetalert2.github.io/images/nyan-cat.gif")
-          left top
-          no-repeat
-        `,
-        padding: '2rem',
-        width: '38rem',
-        timer: 10000,
-        timerProgressBar: true
+  name: 'PaginaJuegos',
+  data() {
+    return {
+      juegos: [
+        { id: 1, nombre: 'Buscaminas Pro', imagen: 'buscaminas.jpeg', enlace: '/juegos/buscaminas', favorito: false, visible: true },
+        { id: 2, nombre: 'Pokemon', imagen: 'pokemon.jpg', enlace: '/juegos/aventura', favorito: false, visible: true },
+        { id: 3, nombre: 'Pixel Runner', imagen: 'pixel-runner.png', enlace: '/juegos/runner', favorito: false, visible: true },
+        { id: 4, nombre: 'Sudoku Master', imagen: 'sudoku.png', enlace: '/juegos/sudoku', favorito: false, visible: true },
+        { id: 5, nombre: 'Tower Defense', imagen: 'tower.png', enlace: '/juegos/tower', favorito: false, visible: true },
+        { id: 6, nombre: 'Neon Plats', imagen: 'neon.png', enlace: '/juegos/neon', favorito: false, visible: true },
+        { id: 7, nombre: 'Cerebro Activo', imagen: 'cerebro.png', enlace: '/juegos/puzzle', favorito: false, visible: true },
+        { id: 8, nombre: 'Dungeon Crawler', imagen: 'dungeon.png', enlace: '/juegos/dungeon', favorito: false, visible: true },
+        { id: 9, nombre: 'Speed Drifter', imagen: 'drifter.png', enlace: '/juegos/drifter', favorito: false, visible: true }
+      ]
+    }
+  },
+  computed: {
+    juegosOrdenados() {
+      return [...this.juegos].sort((a, b) => {
+        if (a.favorito === b.favorito) return 0;
+        return a.favorito ? -1 : 1;
       });
+    }
+  },
+  methods: {
+    marcarFavorito(id) {
+      const juego = this.juegos.find(j => j.id === id);
+      if (juego) {
+        juego.favorito = !juego.favorito;
+      }
+    },
+    toggleVisibilidad(id) {
+      const juego = this.juegos.find(j => j.id === id);
+      if (juego) {
+        juego.visible = !juego.visible;
+      }
+    },
+    obtenerImagen(nombreArchivo) {
+      try {
+        return require(`@/assets/banners/${nombreArchivo}`);
+      } catch (e) {
+        return null; 
+      }
     }
   }
 }
 </script>
+
+<style scoped>
+.game-card {
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+  text-decoration: none; 
+}
+
+.game-card:hover {
+  transform: scale(1.03);
+}
+
+.shadow-custom {
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1) !important;
+}
+
+::v-deep .v-image__image {
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+.transparent {
+  background-color: transparent !important;
+}
+
+.relative-container {
+  position: relative;
+}
+
+.action-btn {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.7) !important; 
+  backdrop-filter: blur(2px); 
+  z-index: 2;
+}
+
+.favorite-btn {
+  bottom: 12px;
+  right: 12px;
+}
+
+.visibility-btn {
+  top: 12px;
+  right: 12px;
+}
+
+/* === Efecto para el borde negro en el corazón rojo === */
+.corazon-marcado {
+  /* Le damos un trazo negro al texto/icono de 1.5px */
+  -webkit-text-stroke: 1.5px black;
+}
+</style>
