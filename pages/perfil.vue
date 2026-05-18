@@ -26,7 +26,32 @@
           <div class="text-body-1 mb-auto">Mejor record: {{ perfil.mejorRecord }}</div>
 
           <div class="text-center mt-8">
-            <span class="caption" style="cursor: pointer;">Ajustes</span>
+            <v-menu top offset-y rounded="lg">
+              <template v-slot:activator="{ on, attrs }">
+                <span 
+                  class="caption text-decoration-underline" 
+                  style="cursor: pointer;"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Ajustes
+                </span>
+              </template>
+
+              <v-list>
+                <v-list-item @click="accionAjustes('cambiar_nombre')">
+                  <v-list-item-title>Cambiar nombre</v-list-item-title>
+                </v-list-item>
+                
+                <v-list-item @click="accionAjustes('eliminar_record')">
+                  <v-list-item-title>Eliminar record</v-list-item-title>
+                </v-list-item>
+                
+                <v-list-item @click="accionAjustes('borrar_cuenta')">
+                  <v-list-item-title class="red--text font-weight-bold">Borrar cuenta</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </v-sheet>
       </v-col>
@@ -71,6 +96,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   data() {
     return {
@@ -85,6 +112,33 @@ export default {
         { nombre: 'Juego y', puesto: 'Puesto', puntuacion: 'Puntuación', tiempo: 'Tiempo' },
         { nombre: 'Juego z', puesto: 'Puesto', puntuacion: 'Puntuación', tiempo: 'Tiempo' }
       ]
+    }
+  },
+  methods: {
+    accionAjustes(accion) {
+      if (accion === 'cambiar_nombre') {
+      } else if (accion === 'eliminar_record') {
+      } else if (accion === 'borrar_cuenta') {
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: 'Esta acción eliminará tu cuenta permanentemente.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#757575',
+          confirmButtonText: 'Borrar',
+          cancelButtonText: 'Cancelar',
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire(
+              '¡Borrada!',
+              'Tu cuenta ha sido eliminada correctamente.',
+              'success'
+            );
+          }
+        });
+      }
     }
   }
 }
