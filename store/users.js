@@ -1,8 +1,5 @@
 import axios from 'axios'
 
-const baseUrl = process.env.API_BASE_URL
-const baseUrlUsers = `${baseUrl}/users`
-
 const authConfig = token => ({
   headers: { Authorization: `Bearer ${token}` }
 })
@@ -66,7 +63,7 @@ export const actions = {
 
     try {
       let response = null
-      response = await axios.get(baseUrlUsers, authConfig(rootState.auth?.token))
+      response = await axios.get(`${baseUrl}/users`, authConfig(rootState.auth?.token))
       commit('SET_ITEMS', response.data.data)
       return response
     } catch (error) {
@@ -83,7 +80,7 @@ export const actions = {
 
     try {
       let response = null
-      response = await axios.get(`${baseUrlUsers}/${userId}`, authConfig(rootState.auth?.token))
+      response = await axios.get(`${baseUrl}/users/${userId}`, authConfig(rootState.auth?.token))
       commit('SET_CURRENT', response.data.data)
       return response
     } catch (error) {
@@ -96,15 +93,16 @@ export const actions = {
 
   async update({ commit, rootState }, user) {
     let response = null
-    response = await axios.post(`${baseUrlUsers}/${user.id}`, user, authConfig(rootState.auth?.token))
+    response = await axios.post(`${baseUrl}/users/${user.id}`, user, authConfig(rootState.auth?.token))
     commit('UPSERT_USER', response.data.data)
     return response
   },
 
   async destroy({ commit, rootState }, userId) {
     let response = null
-    response = await axios.delete(`${baseUrlUsers}/${userId}`, authConfig(rootState.auth?.token))
+    response = await axios.delete(`${baseUrl}/users/${userId}`, authConfig(rootState.auth?.token))
     commit('REMOVE_USER', userId)
     return response
   }
 }
+const baseUrl = process.env.API_BASE_URL

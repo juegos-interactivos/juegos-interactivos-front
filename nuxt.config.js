@@ -5,6 +5,9 @@ export default {
   publicRuntimeConfig: {
     apiBaseUrl: process.env.API_BASE_URL
   },
+  env: {
+    API_BASE_URL: process.env.API_BASE_URL
+  },
   /*
   ** Headers of the page
   */

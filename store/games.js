@@ -1,8 +1,5 @@
 import axios from 'axios'
 
-const baseUrl = process.env.API_BASE_URL
-const baseUrlGames = `${baseUrl}/games`
-
 const authConfig = token => ({
   headers: { Authorization: `Bearer ${token}` }
 })
@@ -67,7 +64,7 @@ export const actions = {
 
     try {
       let response = null
-      response = await axios.get(baseUrlGames)
+      response = await axios.get(`${baseUrl}/games`)
       commit('SET_ITEMS', response.data.data)
       return response
     } catch (error) {
@@ -84,7 +81,7 @@ export const actions = {
 
     try {
       let response = null
-      response = await axios.get(`${baseUrlGames}/${gameId}`)
+      response = await axios.get(`${baseUrl}/games/${gameId}`)
       commit('SET_CURRENT', response.data.data)
       return response
     } catch (error) {
@@ -97,22 +94,23 @@ export const actions = {
 
   async update({ commit, rootState }, game) {
     let response = null
-    response = await axios.post(`${baseUrlGames}/${game.id}`, game, authConfig(rootState.auth?.token))
+    response = await axios.post(`${baseUrl}/games/${game.id}`, game, authConfig(rootState.auth?.token))
     commit('UPSERT_GAME', response.data.data)
     return response
   },
 
   async toggle({ commit, rootState }, gameId) {
     let response = null
-    response = await axios.post(`${baseUrlGames}/${gameId}/toggle`, {}, authConfig(rootState.auth?.token))
+    response = await axios.post(`${baseUrl}/games/${gameId}/toggle`, {}, authConfig(rootState.auth?.token))
     commit('UPSERT_GAME', response.data.data)
     return response
   },
 
   async destroy({ commit, rootState }, gameId) {
     let response = null
-    response = await axios.delete(`${baseUrlGames}/${gameId}`, authConfig(rootState.auth?.token))
+    response = await axios.delete(`${baseUrl}/games/${gameId}`, authConfig(rootState.auth?.token))
     commit('REMOVE_GAME', gameId)
     return response
   }
 }
+const baseUrl = process.env.API_BASE_URL

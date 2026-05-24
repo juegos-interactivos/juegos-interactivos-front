@@ -1,8 +1,5 @@
 import axios from 'axios'
 
-const baseUrl = process.env.API_BASE_URL
-const baseUrlAuth = `${baseUrl}/auth`
-
 const authConfig = token => ({
   headers: {
     Authorization: `Bearer ${token}`
@@ -97,7 +94,7 @@ export const actions = {
 
     try {
       let response = null
-      response = await axios.post(`${baseUrlAuth}/register`, form)
+      response = await axios.post(`${baseUrl}/auth/register`, form)
       commit('SET_AUTH', response.data)
       saveSession(response.data)
       return response
@@ -115,7 +112,7 @@ export const actions = {
 
     try {
       let response = null
-      response = await axios.post(`${baseUrlAuth}/login`, credentials)
+      response = await axios.post(`${baseUrl}/auth/login`, credentials)
       commit('SET_AUTH', response.data)
       saveSession(response.data)
       return response
@@ -133,7 +130,7 @@ export const actions = {
     }
 
     let response = null
-    response = await axios.get(`${baseUrlAuth}/me`, authConfig(state.token))
+    response = await axios.get(`${baseUrl}/auth/me`, authConfig(state.token))
     commit('SET_USER', response.data.user)
     saveSession({ user: response.data.user, token: state.token })
     return response
@@ -141,10 +138,11 @@ export const actions = {
 
   async logout({ commit, state }) {
     if (state.token) {
-      await axios.post(`${baseUrlAuth}/logout`, {}, authConfig(state.token)).catch(() => null)
+      await axios.post(`${baseUrl}/auth/logout`, {}, authConfig(state.token)).catch(() => null)
     }
 
     commit('CLEAR_AUTH')
     clearSession()
   }
 }
+const baseUrl = process.env.API_BASE_URL
