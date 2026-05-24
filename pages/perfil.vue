@@ -20,10 +20,10 @@
             </v-sheet>
           </div>
 
-          <div class="text-h6 text-center mb-8">{{ perfil.nombre }}</div>
-          <div class="text-body-1 mb-4">Nivel: {{ perfil.nivel }}</div>
-          <div class="text-body-1 mb-4">Usuario desde: {{ perfil.fechaRegistro }}</div>
-          <div class="text-body-1 mb-auto">Mejor record: {{ perfil.mejorRecord }}</div>
+          <div class="text-h6 text-center mb-8">{{ profile.nickname }}</div>
+          <div class="text-body-1 mb-4">Nivel: {{ profile.level }}</div>
+          <div class="text-body-1 mb-4">Usuario desde: {{ profile.registeredAt }}</div>
+          <div class="text-body-1 mb-auto">Mejor record: {{ profile.bestRecord }}</div>
 
           <div class="text-center mt-8">
             <v-menu top offset-y rounded="lg">
@@ -39,15 +39,15 @@
               </template>
 
               <v-list>
-                <v-list-item @click="accionAjustes('cambiar_nombre')">
+                <v-list-item @click="handleSettingsAction('change_name')">
                   <v-list-item-title>Cambiar nombre</v-list-item-title>
                 </v-list-item>
                 
-                <v-list-item @click="accionAjustes('eliminar_record')">
+                <v-list-item @click="handleSettingsAction('delete_record')">
                   <v-list-item-title>Eliminar record</v-list-item-title>
                 </v-list-item>
                 
-                <v-list-item @click="accionAjustes('borrar_cuenta')">
+                <v-list-item @click="handleSettingsAction('delete_account')">
                   <v-list-item-title class="red--text font-weight-bold">Borrar cuenta</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -77,11 +77,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(juego, i) in rankings" :key="i">
-                    <td class="text-h6 font-weight-regular pt-4 pb-4">{{ juego.nombre }}</td>
-                    <td class="text-h6 font-weight-regular pt-4 pb-4">{{ juego.puesto }}</td>
-                    <td class="text-center text-h6 font-weight-regular pt-4 pb-4">{{ juego.puntuacion }}</td>
-                    <td class="text-right text-h6 font-weight-regular pt-4 pb-4">{{ juego.tiempo }}</td>
+                  <tr v-for="(game, i) in rankings" :key="i">
+                    <td class="text-h6 font-weight-regular pt-4 pb-4">{{ game.name }}</td>
+                    <td class="text-h6 font-weight-regular pt-4 pb-4">{{ game.rank }}</td>
+                    <td class="text-center text-h6 font-weight-regular pt-4 pb-4">{{ game.score }}</td>
+                    <td class="text-right text-h6 font-weight-regular pt-4 pb-4">{{ game.time }}</td>
                   </tr>
                 </tbody>
               </template>
@@ -101,24 +101,51 @@ import Swal from 'sweetalert2';
 export default {
   data() {
     return {
-      perfil: {
-        nombre: 'NachoTrabaja',
-        nivel: 12,
-        fechaRegistro: '12/05/2021',
-        mejorRecord: '4200 (Buscaminas)'
+      profileFallback: {
+        nickname: 'Invitado',
+        level: 0,
+        registeredAt: '-',
+        bestRecord: '-'
       },
-      rankings: [
-        { nombre: 'Buscaminas', puesto: '140', puntuacion: '4200', tiempo: '11:30' },
-        { nombre: 'Juego y', puesto: 'Puesto', puntuacion: 'Puntuación', tiempo: 'Tiempo' },
-        { nombre: 'Juego z', puesto: 'Puesto', puntuacion: 'Puntuación', tiempo: 'Tiempo' }
+      rankingsFallback: [
+        { name: 'Buscaminas', rank: '140', score: '4200', time: '11:30' },
+        { name: 'Juego y', rank: 'Puesto', score: 'Puntuación', time: 'Tiempo' },
+        { name: 'Juego z', rank: 'Puesto', score: 'Puntuación', time: 'Tiempo' }
       ]
     }
   },
+  computed: {
+    profile() {
+      const user = this.$store.state.auth.user;
+
+      if (!user) {
+        return this.profileFallback;
+      }
+
+      return {
+        nickname: user.nickname,
+        level: user.level || 0,
+        registeredAt: user.created_at ? new Date(user.created_at).toLocaleDateString('es-ES') : '-',
+        bestRecord: user.best_record || '-'
+      };
+    },
+    rankings() {
+      const rankings = this.$store.getters['user_games/rankings'];
+      return rankings.length ? rankings : this.rankingsFallback;
+    }
+  },
+  async mounted() {
+    this.$store.dispatch('auth/init');
+    await Promise.all([
+      this.$store.dispatch('auth/me').catch(() => null),
+      this.$store.dispatch('games/fetchAll').catch(() => null)
+    ]);
+  },
   methods: {
-    accionAjustes(accion) {
-      if (accion === 'cambiar_nombre') {
-      } else if (accion === 'eliminar_record') {
-      } else if (accion === 'borrar_cuenta') {
+    handleSettingsAction(action) {
+      if (action === 'change_name') {
+      } else if (action === 'delete_record') {
+      } else if (action === 'delete_account') {
         Swal.fire({
           title: '¿Estás seguro?',
           text: 'Esta acción eliminará tu cuenta permanentemente.',

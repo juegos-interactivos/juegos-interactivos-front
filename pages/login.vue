@@ -12,8 +12,8 @@
 
       <v-form @submit.prevent="login">
         <v-text-field
-          v-model="nombre"
-          placeholder="Nombre"
+          v-model="mail"
+          placeholder="Correo electrónico"
           solo
           flat
           hide-details
@@ -39,6 +39,7 @@
           height="48"
           elevation="0"
           type="submit"
+          :loading="$store.state.auth.loading"
         >
           Entrar
         </v-btn>
@@ -58,17 +59,27 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: 'Login',
   data() {
     return {
-      nombre: '',
+      mail: '',
       password: ''
     }
   },
   methods: {
-    login() {
-      console.log('Intentando iniciar sesión con:', this.nombre, this.password)
+    async login() {
+      try {
+        await this.$store.dispatch('auth/login', {
+          mail: this.mail,
+          password: this.password
+        });
+        this.$router.push('/perfil');
+      } catch (error) {
+        Swal.fire('Error', error.message, 'error');
+      }
     }
   }
 }

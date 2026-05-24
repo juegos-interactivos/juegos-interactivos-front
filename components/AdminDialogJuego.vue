@@ -2,18 +2,18 @@
   <v-dialog :value="value" @input="$emit('input', $event)" max-width="800">
     <v-card class="rounded-xl pa-4" color="#e0e0e0" elevation="0">
       <v-card-title class="text-h5 font-weight-bold black--text mb-4">
-        Opciones de Juego: {{ juegoLocal.nombre }}
+        Opciones de Juego: {{ localGame.name }}
       </v-card-title>
       
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="8" class="d-flex flex-column justify-center pb-0">
             <span class="text-caption grey--text text--darken-2 mb-1">Nombre del juego</span>
-            <span class="text-h6 font-weight-bold black--text">{{ juegoLocal.nombre }}</span>
+            <span class="text-h6 font-weight-bold black--text">{{ localGame.name }}</span>
           </v-col>
           <v-col cols="12" sm="4" class="d-flex align-center">
             <v-switch
-              v-model="juegoLocal.visible"
+              v-model="localGame.isActive"
               label="Visible"
               color="green"
               hide-details
@@ -26,14 +26,14 @@
         
         <v-data-table
           :headers="headers"
-          :items="puntuaciones"
+          :items="scores"
           class="transparent-table elevation-0"
           hide-default-footer
           disable-pagination
           style="background-color: transparent !important;"
         >
-          <template v-slot:[`item.acciones`]="{ item }">
-            <v-btn icon small @click="eliminarPuntuacion(item)">
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-btn icon small @click="deleteScore(item)">
               <v-icon color="red">mdi-delete</v-icon>
             </v-btn>
           </template>
@@ -45,7 +45,7 @@
         <v-btn color="#757575" text class="font-weight-bold" @click="$emit('input', false)">
           Cerrar
         </v-btn>
-        <v-btn color="black" class="white--text font-weight-bold rounded-pill px-6" elevation="0" @click="guardar">
+        <v-btn color="black" class="white--text font-weight-bold rounded-pill px-6" elevation="0" @click="save">
           Guardar Cambios
         </v-btn>
       </v-card-actions>
@@ -60,38 +60,38 @@ export default {
   name: 'AdminDialogJuego',
   props: {
     value: Boolean,
-    juego: Object
+    game: Object
   },
   data() {
     return {
-      juegoLocal: {},
+      localGame: {},
       headers: [
-        { text: 'USUARIO', value: 'usuario', class: 'font-weight-bold black--text' },
-        { text: 'PUNTUACIÓN', value: 'puntuacion', class: 'font-weight-bold black--text' },
-        { text: 'TIEMPO', value: 'tiempo', class: 'font-weight-bold black--text' },
-        { text: 'FECHA', value: 'fecha', class: 'font-weight-bold black--text' },
-        { text: 'ELIMINAR', value: 'acciones', sortable: false, class: 'font-weight-bold black--text', align: 'center' }
+        { text: 'USUARIO', value: 'user', class: 'font-weight-bold black--text' },
+        { text: 'PUNTUACIÓN', value: 'score', class: 'font-weight-bold black--text' },
+        { text: 'TIEMPO', value: 'time', class: 'font-weight-bold black--text' },
+        { text: 'FECHA', value: 'date', class: 'font-weight-bold black--text' },
+        { text: 'ELIMINAR', value: 'actions', sortable: false, class: 'font-weight-bold black--text', align: 'center' }
       ],
-      puntuaciones: []
+      scores: []
     }
   },
   watch: {
-    value(nuevoValor) {
-      if (nuevoValor) {
-        this.juegoLocal = { ...this.juego };
-        this.puntuaciones = [
-          { id: 201, usuario: 'NachoTrabaja', puntuacion: 4200, tiempo: '11:30', fecha: '14/10/2023' },
-          { id: 202, usuario: 'SpeedRunner', puntuacion: 5100, tiempo: '09:15', fecha: '15/10/2023' },
-          { id: 203, usuario: 'GamerPro99', puntuacion: 3800, tiempo: '14:20', fecha: '16/10/2023' }
+    value(newValue) {
+      if (newValue) {
+        this.localGame = { ...this.game };
+        this.scores = [
+          { id: 201, user: 'NachoTrabaja', score: 4200, time: '11:30', date: '14/10/2023' },
+          { id: 202, user: 'SpeedRunner', score: 5100, time: '09:15', date: '15/10/2023' },
+          { id: 203, user: 'GamerPro99', score: 3800, time: '14:20', date: '16/10/2023' }
         ];
       }
     }
   },
   methods: {
-    eliminarPuntuacion(puntuacion) {
+    deleteScore(score) {
       Swal.fire({
         title: '¿Borrar puntuación?',
-        text: `Eliminarás la puntuación de ${puntuacion.usuario}.`,
+        text: `Eliminarás la puntuación de ${score.user}.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -101,14 +101,14 @@ export default {
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          const index = this.puntuaciones.indexOf(puntuacion);
-          this.puntuaciones.splice(index, 1);
+          const index = this.scores.indexOf(score);
+          this.scores.splice(index, 1);
           Swal.fire('¡Borrada!', 'La puntuación ha sido eliminada.', 'success');
         }
       });
     },
-    guardar() {
-      this.$emit('guardar', this.juegoLocal);
+    save() {
+      this.$emit('save', this.localGame);
       this.$emit('input', false);
     }
   }

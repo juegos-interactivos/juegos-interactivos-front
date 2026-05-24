@@ -34,10 +34,28 @@
         <v-btn text class="black--text font-weight-bold text-h5 text-none px-2" to="/perfil">
           Perfil
         </v-btn>
-        <v-btn text class="black--text font-weight-bold text-h5 text-none px-2 ml-4" to="/login">
+        <v-btn
+          v-if="!$store.getters['auth/isAuthenticated']"
+          text
+          class="black--text font-weight-bold text-h5 text-none px-2 ml-4"
+          to="/login"
+        >
           Inicia Sesión
         </v-btn>
-        <v-btn text class="black--text font-weight-bold text-h5 text-none px-2 ml-4" to="/admin">
+        <v-btn
+          v-else
+          text
+          class="black--text font-weight-bold text-h5 text-none px-2 ml-4"
+          @click="logout"
+        >
+          Salir
+        </v-btn>
+        <v-btn
+          v-if="$store.getters['auth/isAdmin']"
+          text
+          class="black--text font-weight-bold text-h5 text-none px-2 ml-4"
+          to="/admin"
+        >
           Panel de administración
         </v-btn>
       </v-sheet>
@@ -58,14 +76,23 @@ export default {
       search: ''
     }
   },
+  mounted() {
+    this.$store.dispatch('auth/init');
+  },
   watch: {
-    search(nuevoValor) {
-      this.$nuxt.$emit('buscar-juego', nuevoValor);
+    search(newValue) {
+      this.$nuxt.$emit('search-game', newValue);
     },
     $route(to) {
       if (to.path !== '/juegos') {
         this.search = '';
       }
+    }
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('auth/logout');
+      this.$router.push('/');
     }
   }
 }

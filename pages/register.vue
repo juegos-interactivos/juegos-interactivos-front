@@ -12,8 +12,18 @@
 
       <v-form @submit.prevent="registrar">
         <v-text-field
-          v-model="nombre"
+          v-model="nickname"
           placeholder="Nombre"
+          solo
+          flat
+          hide-details
+          class="mb-5 rounded-lg"
+          background-color="white"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="mail"
+          placeholder="Correo electrónico"
           solo
           flat
           hide-details
@@ -50,6 +60,7 @@
           height="48"
           elevation="0"
           type="submit"
+          :loading="$store.state.auth.loading"
         >
           Crear
         </v-btn>
@@ -69,18 +80,36 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: 'Registro',
   data() {
     return {
-      nombre: '',
+      nickname: '',
+      mail: '',
       password: '',
       confirmarPassword: ''
     }
   },
   methods: {
-    registrar() {
-      console.log('Intentando registrar con:', this.nombre, this.password, this.confirmarPassword)
+    async registrar() {
+      if (this.password !== this.confirmarPassword) {
+        Swal.fire('Error', 'Las contraseñas no coinciden.', 'error');
+        return;
+      }
+
+      try {
+        await this.$store.dispatch('auth/register', {
+          nickname: this.nickname,
+          mail: this.mail,
+          password: this.password,
+          image: 'mdi-account'
+        });
+        this.$router.push('/perfil');
+      } catch (error) {
+        Swal.fire('Error', error.message, 'error');
+      }
     }
   }
 }
