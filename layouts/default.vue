@@ -1,16 +1,16 @@
 <template>
   <v-app>
-    <v-app-bar app flat color="white" height="90">
-      <div class="d-flex align-center">
+    <v-app-bar app elevation="1" color="white" height="90">
+      <nuxt-link to="/" class="d-flex align-center text-decoration-none">
         <img src="~/assets/sweetpea.png" alt="Logo" height="60" class="mr-3" />
-        <div class="font-italic font-weight-medium" style="line-height: 1.2; color: #333;">
+        <div class="font-italic font-weight-bold text-h6" style="line-height: 1.2; color: #10b981;">
           Nombre en<br>progreso
         </div>
-      </div>
+      </nuxt-link>
 
       <v-spacer></v-spacer>
 
-      <v-sheet color="#9e9e9e" class="d-flex align-center rounded-pill px-6 py-2 menu-container">
+      <v-sheet color="#10b981" class="d-flex align-center rounded-pill px-6 py-2 menu-container shadow-custom">
         <div :class="['search-wrapper', { 'search-active': $route.path === '/juegos' }]">
           <v-text-field
             v-model="search"
@@ -21,29 +21,31 @@
             rounded
             dense
             hide-details
+            background-color="white"
+            color="#10b981"
             style="width: 250px;"
           ></v-text-field>
         </div>
 
-        <v-btn text class="black--text font-weight-bold text-h5 text-none px-2" to="/">
+        <v-btn text class="white--text font-weight-bold text-h6 text-none px-4 rounded-pill transition-swing" active-class="active-nav-btn" to="/">
           {{ $t('menu.home') }}
         </v-btn>
-        <v-btn text class="black--text font-weight-bold text-h5 text-none px-2 mx-4" to="/juegos">
+        <v-btn text class="white--text font-weight-bold text-h6 text-none px-4 mx-2 rounded-pill transition-swing" active-class="active-nav-btn" to="/juegos">
           {{ $t('menu.games') }}
         </v-btn>
-        <v-btn text class="black--text font-weight-bold text-h5 text-none px-2" to="/perfil">
+        <v-btn text class="white--text font-weight-bold text-h6 text-none px-4 rounded-pill transition-swing" active-class="active-nav-btn" to="/perfil">
           {{ $t('menu.profile') }}
         </v-btn>
-        <v-btn text class="black--text font-weight-bold text-h5 text-none px-2 ml-4" to="/login">
+        <v-btn text class="white--text font-weight-bold text-h6 text-none px-4 ml-2 rounded-pill transition-swing" active-class="active-nav-btn" to="/login">
           {{ $t('menu.login') }}
         </v-btn>
-        <v-btn text class="black--text font-weight-bold text-h5 text-none px-2 ml-4" to="/admin">
+        <v-btn text class="white--text font-weight-bold text-h6 text-none px-4 ml-2 rounded-pill transition-swing" active-class="active-nav-btn" to="/admin">
           {{ $t('menu.admin') }}
         </v-btn>
       </v-sheet>
     </v-app-bar>
 
-    <v-main>
+    <v-main style="background-color: #f4f7f6;">
       <v-container>
         <nuxt />
       </v-container>
@@ -52,32 +54,33 @@
     <v-menu top offset-y rounded="xl" transition="slide-y-reverse-transition">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          color="#9e9e9e"
-          class="black--text font-weight-bold lang-selector shadow-custom"
-          elevation="0"
-          rounded
+          color="#10b981"
+          class="white--text font-weight-bold lang-selector shadow-custom"
+          elevation="4"
+          fab
+          large
           v-bind="attrs"
           v-on="on"
         >
-          <v-icon left color="black">mdi-translate</v-icon>
-          {{ currentLanguage }}
+          <v-icon>mdi-translate</v-icon>
+          <span class="ml-1">{{ currentLanguage }}</span>
         </v-btn>
       </template>
       
-      <v-list color="#9e9e9e" class="rounded-xl pa-2 shadow-custom">
+      <v-list color="white" class="rounded-xl pa-2 shadow-custom">
         <v-list-item 
           @click="changeLanguage('es')" 
-          class="rounded-lg mb-1" 
+          class="rounded-lg mb-1 transition-swing" 
           :class="{'active-lang': $i18n.locale === 'es'}"
         >
-          <v-list-item-title class="font-weight-bold text-center black--text">ES</v-list-item-title>
+          <v-list-item-title class="font-weight-bold text-center" :class="{'white--text': $i18n.locale === 'es', 'green--text text--darken-2': $i18n.locale !== 'es'}">ES</v-list-item-title>
         </v-list-item>
         <v-list-item 
           @click="changeLanguage('en')" 
-          class="rounded-lg" 
+          class="rounded-lg transition-swing" 
           :class="{'active-lang': $i18n.locale === 'en'}"
         >
-          <v-list-item-title class="font-weight-bold text-center black--text">EN</v-list-item-title>
+          <v-list-item-title class="font-weight-bold text-center" :class="{'white--text': $i18n.locale === 'en', 'green--text text--darken-2': $i18n.locale !== 'en'}">EN</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -85,6 +88,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: 'DefaultLayout',
   data() {
@@ -115,6 +120,21 @@ export default {
         } else {
           this.$i18n.locale = code;
         }
+        
+        Swal.fire({
+          toast: true,
+          position: 'bottom-end',
+          icon: 'success',
+          iconColor: '#10b981',
+          title: this.$t('menu.lang_changed'),
+          showConfirmButton: false,
+          timer: 2000,
+          background: '#ffffff',
+          color: '#10b981',
+          customClass: {
+            popup: 'rounded-xl shadow-custom'
+          }
+        });
       }
     }
   }
@@ -147,17 +167,28 @@ export default {
   bottom: 24px;
   left: 24px;
   z-index: 100;
+  border-radius: 28px !important;
+  width: auto !important;
+  padding: 0 20px !important;
 }
 
 .shadow-custom {
-  box-shadow: 0px 4px 15px rgba(0,0,0,0.15) !important;
+  box-shadow: 0px 8px 20px rgba(16, 185, 129, 0.2) !important;
+}
+
+.active-nav-btn {
+  background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .active-lang {
-  background-color: rgba(255, 255, 255, 0.4) !important;
+  background-color: #10b981 !important;
 }
 
-::v-deep .v-list-item:hover {
-  background-color: rgba(255, 255, 255, 0.2) !important;
+::v-deep .v-list-item:hover:not(.active-lang) {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+::v-deep .v-btn:hover::before {
+  opacity: 0.1;
 }
 </style>

@@ -5,7 +5,8 @@ export default {
     games: 'Juegos',
     profile: 'Perfil',
     login: 'Inicia Sesión',
-    admin: 'Panel de administración'
+    admin: 'Panel de administración',
+    lang_changed: 'Idioma actualizado'
   },
   index: {
     welcome_title: 'Bienvenido a G de Juegos',
@@ -27,7 +28,9 @@ export default {
     }
   },
   juegos: {
-    title: 'Todos los juegos'
+    title: 'Todos los juegos',
+    added_favorite: 'Añadido a favoritos',
+    removed_favorite: 'Eliminado de favoritos'
   },
   perfil: {
     nivel: 'Nivel',
@@ -52,7 +55,14 @@ export default {
       btn_borrar: 'Borrar',
       btn_cancelar: 'Cancelar',
       borrado_titulo: '¡Borrada!',
-      borrado_texto: 'Tu cuenta ha sido eliminada correctamente.'
+      borrado_texto: 'Tu cuenta ha sido eliminada correctamente.',
+      change_name_title: 'Cambiar nombre',
+      btn_update: 'Actualizar',
+      name_updated: '¡Nombre actualizado!',
+      delete_record_title: '¿Eliminar récord?',
+      delete_record_text: 'Se eliminará tu récord actual.',
+      btn_delete: 'Eliminar',
+      record_deleted: '¡Récord eliminado!'
     }
   },
   login: {

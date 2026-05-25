@@ -1,55 +1,57 @@
 <template>
   <v-container fluid class="pa-4 pa-md-8">
-    <h2 class="text-h4 font-weight-bold mb-8 pl-2">{{ $t('juegos.title') }}</h2>
+    <h2 class="text-h4 font-weight-bold mb-8 pl-2" style="color: #10b981;">
+      {{ $t('juegos.title') }}
+    </h2>
 
     <v-row>
       <v-col
-        v-for="juego in juegosOrdenados"
-        :key="juego.id"
+        v-for="game in sortedGames"
+        :key="game.id"
         cols="12"
         sm="6"
         md="4"
         class="pa-4"
       >
         <v-card
-          :to="juego.enlace"
+          :to="game.link"
           class="rounded-xl game-card transparent"
           elevation="0"
         >
-          <v-sheet color="#9e9e9e" class="rounded-xl overflow-hidden shadow-custom relative-container">
+          <v-sheet class="rounded-xl overflow-hidden shadow-custom relative-container" style="background-color: white;">
             <v-img 
-              :src="obtenerImagen(juego.imagen)" 
+              :src="getImage(game.image)" 
               aspect-ratio="1.7778"
             >
               <v-btn
                 icon
-                class="action-btn visibility-btn"
-                @click.stop.prevent="toggleVisibilidad(juego.id)"
+                class="action-btn visibility-btn transition-swing"
+                @click.stop.prevent="toggleVisibility(game.id)"
               >
-                <v-icon size="28" color="black">
-                  {{ juego.visible ? 'mdi-eye' : 'mdi-eye-off' }}
+                <v-icon size="28" :color="game.isVisible ? '#10b981' : 'grey darken-1'">
+                  {{ game.isVisible ? 'mdi-eye' : 'mdi-eye-off' }}
                 </v-icon>
               </v-btn>
 
               <v-btn
                 icon
-                class="action-btn favorite-btn"
-                @click.stop.prevent="marcarFavorito(juego.id)"
+                class="action-btn favorite-btn transition-swing"
+                @click.stop.prevent="toggleFavorite(game.id)"
               >
                 <v-icon 
                   size="32" 
-                  :color="juego.favorito ? '#ff3333' : 'black'"
-                  :class="{ 'corazon-marcado': juego.favorito }"
+                  :color="game.isFavorite ? '#ef4444' : 'grey darken-1'"
+                  :class="{ 'corazon-marcado': game.isFavorite }"
                 >
-                  {{ juego.favorito ? 'mdi-heart' : 'mdi-heart-outline' }}
+                  {{ game.isFavorite ? 'mdi-heart' : 'mdi-heart-outline' }}
                 </v-icon>
               </v-btn>
             </v-img>
           </v-sheet>
 
-          <div class="text-center mt-3">
-            <span class="text-h6 font-weight-bold black--text">
-              {{ juego.nombre }}
+          <div class="text-center mt-4">
+            <span class="text-h6 font-weight-bold" style="color: #2c3e50;">
+              {{ game.name }}
             </span>
           </div>
         </v-card>
@@ -59,63 +61,80 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+
 export default {
   name: 'GamesPage',
   data() {
     return {
       searchQuery: '',
-      juegos: [
-        { id: 1, nombre: 'Buscaminas Pro', imagen: 'buscaminas.jpeg', enlace: '/juegos/buscaminas', favorito: false, visible: true },
-        { id: 2, nombre: 'Pokemon', imagen: 'pokemon.jpg', enlace: '/juegos/aventura', favorito: false, visible: true },
-        { id: 3, nombre: 'Pixel Runner', imagen: 'pixel-runner.png', enlace: '/juegos/runner', favorito: false, visible: true },
-        { id: 4, nombre: 'Sudoku Master', imagen: 'sudoku.png', enlace: '/juegos/sudoku', favorito: false, visible: true },
-        { id: 5, nombre: 'Tower Defense', imagen: 'tower.png', enlace: '/juegos/tower', favorito: false, visible: true },
-        { id: 6, nombre: 'Neon Plats', imagen: 'neon.png', enlace: '/juegos/neon', favorito: false, visible: true },
-        { id: 7, nombre: 'Cerebro Activo', imagen: 'cerebro.png', enlace: '/juegos/puzzle', favorito: false, visible: true },
-        { id: 8, nombre: 'Dungeon Crawler', imagen: 'dungeon.png', enlace: '/juegos/dungeon', favorito: false, visible: true },
-        { id: 9, nombre: 'Speed Drifter', imagen: 'drifter.png', enlace: '/juegos/drifter', favorito: false, visible: true }
+      games: [
+        { id: 1, name: 'Buscaminas Pro', image: 'buscaminas.jpeg', link: '/juegos/buscaminas', isFavorite: false, isVisible: true },
+        { id: 2, name: 'Pokemon', image: 'pokemon.jpg', link: '/juegos/aventura', isFavorite: false, isVisible: true },
+        { id: 3, name: 'Pixel Runner', image: 'pixel-runner.png', link: '/juegos/runner', isFavorite: false, isVisible: true },
+        { id: 4, name: 'Sudoku Master', image: 'sudoku.png', link: '/juegos/sudoku', isFavorite: false, isVisible: true },
+        { id: 5, name: 'Tower Defense', image: 'tower.png', link: '/juegos/tower', isFavorite: false, isVisible: true },
+        { id: 6, name: 'Neon Plats', image: 'neon.png', link: '/juegos/neon', isFavorite: false, isVisible: true },
+        { id: 7, name: 'Cerebro Activo', image: 'cerebro.png', link: '/juegos/puzzle', isFavorite: false, isVisible: true },
+        { id: 8, name: 'Dungeon Crawler', image: 'dungeon.png', link: '/juegos/dungeon', isFavorite: false, isVisible: true },
+        { id: 9, name: 'Speed Drifter', image: 'drifter.png', link: '/juegos/drifter', isFavorite: false, isVisible: true }
       ]
     }
   },
   computed: {
-    juegosOrdenados() {
-      let lista = [...this.juegos];
+    sortedGames() {
+      let list = [...this.games];
 
       if (this.searchQuery) {
-        const termino = this.searchQuery.toLowerCase();
-        lista = lista.filter(juego => juego.nombre.toLowerCase().includes(termino));
+        const term = this.searchQuery.toLowerCase();
+        list = list.filter(game => game.name.toLowerCase().includes(term));
       }
 
-      return lista.sort((a, b) => {
-        if (a.favorito === b.favorito) return 0;
-        return a.favorito ? -1 : 1;
+      return list.sort((a, b) => {
+        if (a.isFavorite === b.isFavorite) return 0;
+        return a.isFavorite ? -1 : 1;
       });
     }
   },
   mounted() {
-    this.$nuxt.$on('search-game', (termino) => {
-      this.searchQuery = termino;
+    this.$nuxt.$on('search-game', (term) => {
+      this.searchQuery = term;
     });
   },
   beforeDestroy() {
     this.$nuxt.$off('search-game');
   },
   methods: {
-    marcarFavorito(id) {
-      const juego = this.juegos.find(j => j.id === id);
-      if (juego) {
-        juego.favorito = !juego.favorito;
+    toggleFavorite(id) {
+      const game = this.games.find(g => g.id === id);
+      if (game) {
+        game.isFavorite = !game.isFavorite;
+        
+        Swal.fire({
+          toast: true,
+          position: 'bottom-end',
+          icon: game.isFavorite ? 'success' : 'info',
+          iconColor: game.isFavorite ? '#ef4444' : '#10b981',
+          title: game.isFavorite ? this.$t('juegos.added_favorite') : this.$t('juegos.removed_favorite'),
+          showConfirmButton: false,
+          timer: 2000,
+          background: '#ffffff',
+          color: '#2c3e50',
+          customClass: {
+            popup: 'rounded-xl shadow-custom'
+          }
+        });
       }
     },
-    toggleVisibilidad(id) {
-      const juego = this.juegos.find(j => j.id === id);
-      if (juego) {
-        juego.visible = !juego.visible;
+    toggleVisibility(id) {
+      const game = this.games.find(g => g.id === id);
+      if (game) {
+        game.isVisible = !game.isVisible;
       }
     },
-    obtenerImagen(nombreArchivo) {
+    getImage(fileName) {
       try {
-        return require(`@/assets/banners/${nombreArchivo}`);
+        return require(`@/assets/banners/${fileName}`);
       } catch (e) {
         return null; 
       }
@@ -126,22 +145,32 @@ export default {
 
 <style scoped>
 .game-card {
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
   text-decoration: none; 
 }
 
 .game-card:hover {
-  transform: scale(1.03);
+  transform: translateY(-5px);
+}
+
+.game-card:hover .shadow-custom {
+  box-shadow: 0px 12px 25px rgba(16, 185, 129, 0.3) !important;
 }
 
 .shadow-custom {
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1) !important;
+  box-shadow: 0px 8px 20px rgba(16, 185, 129, 0.15) !important;
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 ::v-deep .v-image__image {
   background-size: cover !important;
   background-position: center center !important;
+  transition: transform 0.5s ease;
+}
+
+.game-card:hover ::v-deep .v-image__image {
+  transform: scale(1.05);
 }
 
 .transparent {
@@ -154,9 +183,15 @@ export default {
 
 .action-btn {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.7) !important; 
-  backdrop-filter: blur(2px); 
+  background-color: rgba(255, 255, 255, 0.85) !important; 
+  backdrop-filter: blur(4px); 
   z-index: 2;
+  transition: all 0.2s ease-in-out;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+  background-color: #ffffff !important;
 }
 
 .favorite-btn {
@@ -170,6 +205,6 @@ export default {
 }
 
 .corazon-marcado {
-  -webkit-text-stroke: 1.5px black;
+  -webkit-text-stroke: 1.5px #ef4444;
 }
 </style>
