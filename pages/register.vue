@@ -22,6 +22,17 @@
         ></v-text-field>
 
         <v-text-field
+          v-model="email"
+          placeholder="Correo electrónico"
+          type="email"
+          solo
+          flat
+          hide-details
+          class="mb-5 rounded-lg"
+          background-color="white"
+        ></v-text-field>
+
+        <v-text-field
           v-model="password"
           placeholder="Contraseña"
           type="password"
@@ -74,13 +85,13 @@ export default {
   data() {
     return {
       nombre: '',
+      email: '',
       password: '',
       confirmarPassword: ''
     }
   },
   methods: {
     registrar() {
-      console.log('Intentando registrar con:', this.nombre, this.password, this.confirmarPassword)
     }
   }
 }

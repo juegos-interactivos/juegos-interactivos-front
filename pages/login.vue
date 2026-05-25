@@ -12,8 +12,9 @@
 
       <v-form @submit.prevent="login">
         <v-text-field
-          v-model="nombre"
-          placeholder="Nombre"
+          v-model="email"
+          placeholder="Correo electrónico"
+          type="email"
           solo
           flat
           hide-details
@@ -62,13 +63,12 @@ export default {
   name: 'Login',
   data() {
     return {
-      nombre: '',
+      email: '',
       password: ''
     }
   },
   methods: {
     login() {
-      console.log('Intentando iniciar sesión con:', this.nombre, this.password)
     }
   }
 }
