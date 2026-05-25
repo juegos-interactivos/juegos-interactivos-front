@@ -84,11 +84,13 @@ export default {
     lazy: true,
     langDir: 'locales/',
     defaultLocale: 'es',
-    strategy: 'prefix_except_default',
+    strategy: 'no_prefix',
     detectBrowserLanguage: {
       useCookie: true,
-      cookieKey: 'i18n_redirected',
+      cookieKey: 'i18n_lang',
       redirectOn: 'root',
+      alwaysRedirect: false,
+      fallbackLocale: 'es'
     }
   },
   /*

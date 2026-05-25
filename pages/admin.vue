@@ -1,21 +1,21 @@
 <template>
   <v-container fluid class="pa-4 pa-md-8">
-    <h2 class="text-h4 font-weight-bold mb-8 pl-2">Panel de Administración</h2>
+    <h2 class="text-h4 font-weight-bold mb-8 pl-2">{{ $t('admin.title') }}</h2>
 
     <v-sheet color="#9e9e9e" class="rounded-xl pa-4 pa-md-8 shadow-custom">
       <v-tabs v-model="tab" background-color="transparent" color="black" grow>
-        <v-tab class="font-weight-bold text-h6">Usuarios</v-tab>
-        <v-tab class="font-weight-bold text-h6">Juegos</v-tab>
+        <v-tab class="font-weight-bold text-h6">{{ $t('admin.tabs.users') }}</v-tab>
+        <v-tab class="font-weight-bold text-h6">{{ $t('admin.tabs.games') }}</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab" style="background-color: transparent;" class="mt-8">
         <v-tab-item>
           <div class="d-flex justify-space-between align-center mb-6">
-            <h3 class="text-h5 font-weight-bold">Gestión de Usuarios</h3>
+            <h3 class="text-h5 font-weight-bold">{{ $t('admin.users.title') }}</h3>
             <v-text-field
               v-model="searchUsuarios"
               append-icon="mdi-magnify"
-              label="Buscar usuario"
+              :label="$t('admin.users.search')"
               single-line
               hide-details
               solo
@@ -41,7 +41,7 @@
                 small
                 class="font-weight-bold"
               >
-                {{ item.estado }}
+                {{ $t('admin.status.' + item.estado.toLowerCase()) }}
               </v-chip>
             </template>
             <template v-slot:[`item.acciones`]="{ item }">
@@ -59,10 +59,10 @@
 
         <v-tab-item>
           <div class="d-flex justify-space-between align-center mb-6">
-            <h3 class="text-h5 font-weight-bold">Gestión de Juegos</h3>
+            <h3 class="text-h5 font-weight-bold">{{ $t('admin.games.title') }}</h3>
             <v-btn color="black" class="white--text font-weight-bold rounded-pill" elevation="0">
               <v-icon left>mdi-plus</v-icon>
-              Añadir Juego
+              {{ $t('admin.games.add_game') }}
             </v-btn>
           </div>
 
@@ -130,32 +130,38 @@ export default {
       usuarioSeleccionado: {},
       juegoSeleccionado: {},
       
-      headersUsuarios: [
-        { text: 'ID', value: 'id', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'NOMBRE', value: 'nombre', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'EMAIL', value: 'email', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'NIVEL', value: 'nivel', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'ESTADO', value: 'estado', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'ACCIONES', value: 'acciones', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
-      ],
       usuarios: [
         { id: 1, nombre: 'NachoTrabaja', email: 'nacho@ejemplo.com', nivel: 12, estado: 'Activo' },
         { id: 2, nombre: 'GamerPro99', email: 'gamerpro@ejemplo.com', nivel: 45, estado: 'Activo' },
         { id: 3, nombre: 'ToxicPlayer', email: 'toxic@ejemplo.com', nivel: 8, estado: 'Baneado' }
       ],
       
-      headersJuegos: [
-        { text: 'ID', value: 'id', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'BANNER', value: 'imagen', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'NOMBRE', value: 'nombre', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: 'VISIBILIDAD', value: 'visible', class: 'text-subtitle-1 font-weight-bold black--text text-center', align: 'center' },
-        { text: 'ACCIONES', value: 'acciones', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
-      ],
       juegos: [
         { id: 1, nombre: 'Buscaminas Pro', imagen: 'buscaminas.jpeg', visible: true },
         { id: 2, nombre: 'Pokemon', imagen: 'pokemon.jpg', visible: true },
         { id: 3, nombre: 'Pixel Runner', imagen: 'pixel-runner.png', visible: false }
       ]
+    }
+  },
+  computed: {
+    headersUsuarios() {
+      return [
+        { text: this.$t('admin.users.headers.id'), value: 'id', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.users.headers.name'), value: 'nombre', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.users.headers.email'), value: 'email', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.users.headers.level'), value: 'nivel', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.users.headers.status'), value: 'estado', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.users.headers.actions'), value: 'acciones', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
+      ];
+    },
+    headersJuegos() {
+      return [
+        { text: this.$t('admin.games.headers.id'), value: 'id', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.games.headers.banner'), value: 'imagen', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.games.headers.name'), value: 'nombre', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.games.headers.visibility'), value: 'visible', class: 'text-subtitle-1 font-weight-bold black--text text-center', align: 'center' },
+        { text: this.$t('admin.games.headers.actions'), value: 'acciones', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
+      ];
     }
   },
   methods: {
@@ -175,26 +181,30 @@ export default {
       if (index !== -1) {
         this.$set(this.usuarios, index, datosNuevos);
       }
-      Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Usuario actualizado', showConfirmButton: false, timer: 1500 });
+      Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: this.$t('admin.toast.user_updated'), showConfirmButton: false, timer: 1500 });
     },
     banearUsuario(usuario) {
-      const accion = usuario.estado === 'Activo' ? 'banear' : 'desbanear';
-      const color = usuario.estado === 'Activo' ? '#d33' : '#4CAF50';
+      const isActivo = usuario.estado === 'Activo';
+      const color = isActivo ? '#d33' : '#4CAF50';
       
       Swal.fire({
-        title: `¿Estás seguro?`,
-        text: `Vas a ${accion} al usuario ${usuario.nombre}.`,
+        title: this.$t('admin.swal.ban.title'),
+        text: isActivo ? this.$t('admin.swal.ban.text_ban', { name: usuario.nombre }) : this.$t('admin.swal.ban.text_unban', { name: usuario.nombre }),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: color,
         cancelButtonColor: '#757575',
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: this.$t('admin.swal.confirm'),
+        cancelButtonText: this.$t('admin.swal.cancel'),
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          usuario.estado = usuario.estado === 'Activo' ? 'Baneado' : 'Activo';
-          Swal.fire('¡Éxito!', `El usuario ha sido ${accion}do correctamente.`, 'success');
+          usuario.estado = isActivo ? 'Baneado' : 'Activo';
+          Swal.fire(
+            this.$t('admin.swal.success_title'), 
+            isActivo ? this.$t('admin.swal.ban.success_ban') : this.$t('admin.swal.ban.success_unban'), 
+            'success'
+          );
         }
       });
     },
@@ -207,24 +217,28 @@ export default {
       if (index !== -1) {
         this.$set(this.juegos, index, datosNuevos);
       }
-      Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Juego actualizado', showConfirmButton: false, timer: 1500 });
+      Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: this.$t('admin.toast.game_updated'), showConfirmButton: false, timer: 1500 });
     },
     eliminarJuego(juego) {
       Swal.fire({
-        title: '¿Eliminar juego?',
-        text: `Vas a eliminar permanentemente ${juego.nombre}.`,
+        title: this.$t('admin.swal.delete_game.title'),
+        text: this.$t('admin.swal.delete_game.text', { name: juego.nombre }),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#757575',
-        confirmButtonText: 'Eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: this.$t('admin.swal.delete_game.confirm_btn'),
+        cancelButtonText: this.$t('admin.swal.cancel'),
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
           const index = this.juegos.indexOf(juego);
           this.juegos.splice(index, 1);
-          Swal.fire('¡Eliminado!', 'El juego ha sido borrado.', 'success');
+          Swal.fire(
+            this.$t('admin.swal.delete_game.success_title'), 
+            this.$t('admin.swal.delete_game.success_text'), 
+            'success'
+          );
         }
       });
     }

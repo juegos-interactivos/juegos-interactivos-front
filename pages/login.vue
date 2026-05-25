@@ -7,13 +7,13 @@
       max-width="450"
     >
       <h2 class="text-center text-h5 font-weight-bold mb-8 black--text">
-        Iniciar Sesión
+        {{ $t('login.title') }}
       </h2>
 
       <v-form @submit.prevent="login">
         <v-text-field
           v-model="email"
-          placeholder="Correo electrónico"
+          :placeholder="$t('login.email_placeholder')"
           type="email"
           solo
           flat
@@ -24,7 +24,7 @@
 
         <v-text-field
           v-model="password"
-          placeholder="Contraseña"
+          :placeholder="$t('login.password_placeholder')"
           type="password"
           solo
           flat
@@ -41,7 +41,7 @@
           elevation="0"
           type="submit"
         >
-          Entrar
+          {{ $t('login.btn_enter') }}
         </v-btn>
       </v-form>
 
@@ -51,7 +51,7 @@
           class="text-body-2 font-weight-medium text-decoration-underline" 
           style="color: #2c4c6b;"
         >
-          No tienes cuenta? Registrate
+          {{ $t('login.no_account') }}
         </nuxt-link>
       </div>
     </v-sheet>

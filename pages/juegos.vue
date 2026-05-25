@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-4 pa-md-8">
-    <h2 class="text-h4 font-weight-bold mb-8 pl-2">Todos los juegos</h2>
+    <h2 class="text-h4 font-weight-bold mb-8 pl-2">{{ $t('juegos.title') }}</h2>
 
     <v-row>
       <v-col

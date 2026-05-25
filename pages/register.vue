@@ -7,13 +7,13 @@
       max-width="450"
     >
       <h2 class="text-center text-h5 font-weight-bold mb-8 black--text">
-        Registrarse
+        {{ $t('register.title') }}
       </h2>
 
       <v-form @submit.prevent="registrar">
         <v-text-field
           v-model="nombre"
-          placeholder="Nombre"
+          :placeholder="$t('register.name_placeholder')"
           solo
           flat
           hide-details
@@ -23,7 +23,7 @@
 
         <v-text-field
           v-model="email"
-          placeholder="Correo electrónico"
+          :placeholder="$t('register.email_placeholder')"
           type="email"
           solo
           flat
@@ -34,7 +34,7 @@
 
         <v-text-field
           v-model="password"
-          placeholder="Contraseña"
+          :placeholder="$t('register.password_placeholder')"
           type="password"
           solo
           flat
@@ -45,7 +45,7 @@
 
         <v-text-field
           v-model="confirmarPassword"
-          placeholder="Confirmar contraseña"
+          :placeholder="$t('register.confirm_password_placeholder')"
           type="password"
           solo
           flat
@@ -62,7 +62,7 @@
           elevation="0"
           type="submit"
         >
-          Crear
+          {{ $t('register.btn_create') }}
         </v-btn>
       </v-form>
 
@@ -72,7 +72,7 @@
           class="text-body-2 font-weight-medium text-decoration-underline" 
           style="color: #2c4c6b;"
         >
-          Ya tienes una cuenta? Inicia Sesión
+          {{ $t('register.have_account') }}
         </nuxt-link>
       </div>
     </v-sheet>

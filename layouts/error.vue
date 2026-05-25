@@ -1,14 +1,28 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
+  <v-app>
+    <v-container fluid class="fill-height d-flex flex-column justify-center align-center pa-4">
+      <v-sheet
+        color="#9e9e9e"
+        class="rounded-xl pa-10 d-flex flex-column align-center text-center shadow-custom"
+        max-width="500"
+        width="100%"
+      >
+        <v-icon size="80" color="black" class="mb-6">mdi-alert-circle-outline</v-icon>
+        
+        <h1 class="text-h4 font-weight-bold black--text mb-8">
+          {{ error.statusCode === 404 ? $t('error.page_not_found') : $t('error.other_error') }}
+        </h1>
+        
+        <v-btn
+          color="black"
+          class="white--text font-weight-bold rounded-pill px-8"
+          elevation="0"
+          to="/"
+        >
+          {{ $t('error.home_page') }}
+        </v-btn>
+      </v-sheet>
+    </v-container>
   </v-app>
 </template>
 
@@ -21,15 +35,10 @@ export default {
       default: null
     }
   },
-  data () {
-    return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
-    }
-  },
   head () {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+    const title = this.error.statusCode === 404 
+      ? this.$t('error.page_not_found') 
+      : this.$t('error.other_error')
     return {
       title
     }
@@ -38,7 +47,7 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  font-size: 20px;
+.shadow-custom {
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.15) !important;
 }
 </style>

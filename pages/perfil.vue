@@ -21,9 +21,9 @@
           </div>
 
           <div class="text-h6 text-center mb-8">{{ perfil.nombre }}</div>
-          <div class="text-body-1 mb-4">Nivel: {{ perfil.nivel }}</div>
-          <div class="text-body-1 mb-4">Usuario desde: {{ perfil.fechaRegistro }}</div>
-          <div class="text-body-1 mb-auto">Mejor record: {{ perfil.mejorRecord }}</div>
+          <div class="text-body-1 mb-4">{{ $t('perfil.nivel') }}: {{ perfil.nivel }}</div>
+          <div class="text-body-1 mb-4">{{ $t('perfil.usuario_desde') }}: {{ perfil.fechaRegistro }}</div>
+          <div class="text-body-1 mb-auto">{{ $t('perfil.mejor_record') }}: {{ perfil.mejorRecord }}</div>
 
           <div class="text-center mt-8">
             <v-menu top offset-y rounded="lg">
@@ -34,21 +34,21 @@
                   v-bind="attrs"
                   v-on="on"
                 >
-                  Ajustes
+                  {{ $t('perfil.ajustes') }}
                 </span>
               </template>
 
               <v-list>
                 <v-list-item @click="accionAjustes('cambiar_nombre')">
-                  <v-list-item-title>Cambiar nombre</v-list-item-title>
+                  <v-list-item-title>{{ $t('perfil.menu.cambiar_nombre') }}</v-list-item-title>
                 </v-list-item>
                 
                 <v-list-item @click="accionAjustes('eliminar_record')">
-                  <v-list-item-title>Eliminar record</v-list-item-title>
+                  <v-list-item-title>{{ $t('perfil.menu.eliminar_record') }}</v-list-item-title>
                 </v-list-item>
                 
                 <v-list-item @click="accionAjustes('borrar_cuenta')">
-                  <v-list-item-title class="red--text font-weight-bold">Borrar cuenta</v-list-item-title>
+                  <v-list-item-title class="red--text font-weight-bold">{{ $t('perfil.menu.borrar_cuenta') }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -63,17 +63,17 @@
           height="100%"
           style="position: relative;"
         >
-          <h2 class="text-center text-h4 font-weight-bold mb-10">Ranking</h2>
+          <h2 class="text-center text-h4 font-weight-bold mb-10">{{ $t('perfil.ranking_title') }}</h2>
 
           <div class="px-md-8">
             <v-simple-table class="transparent-table">
               <template v-slot:default>
                 <thead>
                   <tr>
-                    <th class="text-left text-h6 font-weight-bold black--text pb-2">JUEGO</th>
-                    <th class="text-left text-h6 font-weight-bold black--text pb-2">PUESTO</th>
-                    <th class="text-center text-h6 font-weight-bold black--text pb-2">PUNTUACIÓN</th>
-                    <th class="text-right text-h6 font-weight-bold black--text pb-2">TIEMPO</th>
+                    <th class="text-left text-h6 font-weight-bold black--text pb-2">{{ $t('perfil.tabla.juego') }}</th>
+                    <th class="text-left text-h6 font-weight-bold black--text pb-2">{{ $t('perfil.tabla.puesto') }}</th>
+                    <th class="text-center text-h6 font-weight-bold black--text pb-2">{{ $t('perfil.tabla.puntuacion') }}</th>
+                    <th class="text-right text-h6 font-weight-bold black--text pb-2">{{ $t('perfil.tabla.tiempo') }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -120,20 +120,20 @@ export default {
       } else if (accion === 'eliminar_record') {
       } else if (accion === 'borrar_cuenta') {
         Swal.fire({
-          title: '¿Estás seguro?',
-          text: 'Esta acción eliminará tu cuenta permanentemente.',
+          title: this.$t('perfil.swal.borrar_titulo'),
+          text: this.$t('perfil.swal.borrar_texto'),
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#d33',
           cancelButtonColor: '#757575',
-          confirmButtonText: 'Borrar',
-          cancelButtonText: 'Cancelar',
+          confirmButtonText: this.$t('perfil.swal.btn_borrar'),
+          cancelButtonText: this.$t('perfil.swal.btn_cancelar'),
           reverseButtons: true
         }).then((result) => {
           if (result.isConfirmed) {
             Swal.fire(
-              '¡Borrada!',
-              'Tu cuenta ha sido eliminada correctamente.',
+              this.$t('perfil.swal.borrado_titulo'),
+              this.$t('perfil.swal.borrado_texto'),
               'success'
             );
           }

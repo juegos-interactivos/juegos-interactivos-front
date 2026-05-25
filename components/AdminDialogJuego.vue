@@ -2,19 +2,19 @@
   <v-dialog :value="value" @input="$emit('input', $event)" max-width="800">
     <v-card class="rounded-xl pa-4" color="#e0e0e0" elevation="0">
       <v-card-title class="text-h5 font-weight-bold black--text mb-4">
-        Opciones de Juego: {{ juegoLocal.nombre }}
+        {{ $t('admin_dialog_juego.title') }} {{ juegoLocal.nombre }}
       </v-card-title>
       
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="8" class="d-flex flex-column justify-center pb-0">
-            <span class="text-caption grey--text text--darken-2 mb-1">Nombre del juego</span>
+            <span class="text-caption grey--text text--darken-2 mb-1">{{ $t('admin_dialog_juego.game_name') }}</span>
             <span class="text-h6 font-weight-bold black--text">{{ juegoLocal.nombre }}</span>
           </v-col>
           <v-col cols="12" sm="4" class="d-flex align-center">
             <v-switch
               v-model="juegoLocal.visible"
-              label="Visible"
+              :label="$t('admin_dialog_juego.visible')"
               color="green"
               hide-details
               class="mt-0"
@@ -22,7 +22,7 @@
           </v-col>
         </v-row>
 
-        <h4 class="text-h6 font-weight-bold black--text mt-8 mb-4">Tabla de Puntuaciones</h4>
+        <h4 class="text-h6 font-weight-bold black--text mt-8 mb-4">{{ $t('admin_dialog_juego.scores_table') }}</h4>
         
         <v-data-table
           :headers="headers"
@@ -43,10 +43,10 @@
       <v-card-actions class="px-6 pb-4 pt-6">
         <v-spacer></v-spacer>
         <v-btn color="#757575" text class="font-weight-bold" @click="$emit('input', false)">
-          Cerrar
+          {{ $t('admin_dialog_juego.close') }}
         </v-btn>
         <v-btn color="black" class="white--text font-weight-bold rounded-pill px-6" elevation="0" @click="guardar">
-          Guardar Cambios
+          {{ $t('admin_dialog_juego.save') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -65,14 +65,18 @@ export default {
   data() {
     return {
       juegoLocal: {},
-      headers: [
-        { text: 'USUARIO', value: 'usuario', class: 'font-weight-bold black--text' },
-        { text: 'PUNTUACIÓN', value: 'puntuacion', class: 'font-weight-bold black--text' },
-        { text: 'TIEMPO', value: 'tiempo', class: 'font-weight-bold black--text' },
-        { text: 'FECHA', value: 'fecha', class: 'font-weight-bold black--text' },
-        { text: 'ELIMINAR', value: 'acciones', sortable: false, class: 'font-weight-bold black--text', align: 'center' }
-      ],
       puntuaciones: []
+    }
+  },
+  computed: {
+    headers() {
+      return [
+        { text: this.$t('admin_dialog_juego.headers.user'), value: 'usuario', class: 'font-weight-bold black--text' },
+        { text: this.$t('admin_dialog_juego.headers.score'), value: 'puntuacion', class: 'font-weight-bold black--text' },
+        { text: this.$t('admin_dialog_juego.headers.time'), value: 'tiempo', class: 'font-weight-bold black--text' },
+        { text: this.$t('admin_dialog_juego.headers.date'), value: 'fecha', class: 'font-weight-bold black--text' },
+        { text: this.$t('admin_dialog_juego.headers.delete'), value: 'acciones', sortable: false, class: 'font-weight-bold black--text', align: 'center' }
+      ];
     }
   },
   watch: {
@@ -90,20 +94,24 @@ export default {
   methods: {
     eliminarPuntuacion(puntuacion) {
       Swal.fire({
-        title: '¿Borrar puntuación?',
-        text: `Eliminarás la puntuación de ${puntuacion.usuario}.`,
+        title: this.$t('admin_dialog_juego.swal.delete_score_title'),
+        text: this.$t('admin_dialog_juego.swal.delete_score_text', { user: puntuacion.usuario }),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#757575',
-        confirmButtonText: 'Borrar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: this.$t('admin_dialog_juego.swal.btn_delete'),
+        cancelButtonText: this.$t('admin_dialog_juego.swal.btn_cancel'),
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
           const index = this.puntuaciones.indexOf(puntuacion);
           this.puntuaciones.splice(index, 1);
-          Swal.fire('¡Borrada!', 'La puntuación ha sido eliminada.', 'success');
+          Swal.fire(
+            this.$t('admin_dialog_juego.swal.deleted_title'),
+            this.$t('admin_dialog_juego.swal.deleted_text'),
+            'success'
+          );
         }
       });
     },

@@ -6,11 +6,11 @@
       min-height="450"
     >
       <h1 class="text-h3 text-md-h2 font-weight-bold black--text mb-6">
-        Bienvenido a G de Juegos
+        {{ $t('index.welcome_title') }}
       </h1>
       
       <p class="text-h6 text-md-h5 black--text mb-10" style="max-width: 700px;">
-        Descubre nuestra colección de mini-juegos, rompe tus propios récords y compite para liderar los ránkings.
+        {{ $t('index.welcome_desc') }}
       </p>
       
       <v-btn 
@@ -19,7 +19,7 @@
         elevation="0" 
         to="/juegos"
       >
-        Explorar Juegos
+        {{ $t('index.explore_btn') }}
       </v-btn>
     </v-sheet>
 
@@ -49,23 +49,23 @@
 <script>
 export default {
   name: 'PaginaInicio',
-  data() {
-    return {
-      features: [
+  computed: {
+    features() {
+      return [
         { 
           icon: 'mdi-gamepad-variant', 
-          title: 'Juega ya', 
-          desc: 'Accede a una gran variedad de juegos rápidos y divertidos sin necesidad de descargas ni tiempos de espera.' 
+          title: this.$t('index.features.play_now.title'), 
+          desc: this.$t('index.features.play_now.desc') 
         },
         { 
           icon: 'mdi-trophy', 
-          title: 'Compite y gana', 
-          desc: 'Supera tus propios límites, sube de nivel en tu perfil y compite contra otros usuarios en el ránking global.' 
+          title: this.$t('index.features.compete.title'), 
+          desc: this.$t('index.features.compete.desc') 
         },
         { 
           icon: 'mdi-heart', 
-          title: 'Guarda tus favoritos', 
-          desc: 'Marca los juegos que más te gusten para tenerlos siempre a mano y supérate cada día.' 
+          title: this.$t('index.features.favorites.title'), 
+          desc: this.$t('index.features.favorites.desc') 
         }
       ]
     }
