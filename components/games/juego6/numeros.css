@@ -1,0 +1,122 @@
+body {
+    background: #1a1a2e;
+    font-family: sans-serif;
+    color: white;
+    user-select: none;
+}
+
+#menu, #info {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+#info {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 1.2rem;
+}
+
+button {
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background: #333;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover { background: #555; }
+#btn-reiniciar { background: #e74c3c; margin-left: 15px; }
+
+button.activo {
+    background-color: #d35400 !important;
+    border: 2px solid white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+#zona-juego {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#rango-info {
+    font-size: 1.1rem;
+    color: #aaa;
+}
+
+#zona-input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#campo-numero {
+    padding: 10px 15px;
+    font-size: 1.4rem;
+    width: 160px;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #555;
+    background: #2a2a4a;
+    color: white;
+    outline: none;
+}
+
+#campo-numero:focus {
+    border-color: #d35400;
+}
+
+#btn-adivinar {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    background: #d35400;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btn-adivinar:hover { background: #e67e22; }
+#btn-adivinar:disabled { background: #555; cursor: default; }
+
+#mensaje-pista {
+    font-size: 1.6rem;
+    font-weight: bold;
+    min-height: 2.5rem;
+    text-align: center;
+}
+
+#historial {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 320px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.entrada-historial {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    border-left: 4px solid #555;
+}
+
+.entrada-historial.mayor { border-left-color: #e74c3c; }
+.entrada-historial.menor { border-left-color: #3498db; }
+.entrada-historial.acierto { border-left-color: #2ecc71; }
+
+.pista-texto { color: #aaa; font-size: 0.9rem; }

@@ -1,0 +1,121 @@
+body {
+    background: #1a1a2e;
+    font-family: sans-serif;
+    color: white;
+    user-select: none;
+}
+
+#menu, #info {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+#info {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 1.2rem;
+}
+
+button {
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background: #333;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover { background: #555; }
+#btn-reiniciar { background: #e74c3c; margin-left: 15px; }
+
+button.activo {
+    background-color: #8e44ad !important;
+    border: 2px solid white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.tablero {
+    display: inline-grid;
+    gap: 3px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid #444;
+}
+
+#contenedor-tablero {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.celda {
+    width: 36px;
+    height: 36px;
+    background: #3a3a5c;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 2px solid #5a5a8a;
+    transition: background 0.1s, transform 0.1s;
+    position: relative;
+}
+
+.celda:hover:not(.revelada):not(.marcada) {
+    background: #5a5a9a;
+    transform: scale(1.05);
+}
+
+.celda.revelada {
+    background: #16213e;
+    border-color: #2a2a4e;
+    cursor: default;
+}
+
+.celda.marcada {
+    background: #5d3a6e;
+    border-color: #9b59b6;
+}
+
+.celda.marcada::after {
+    content: '🚩';
+    font-size: 1rem;
+}
+
+.celda.mina-explotada {
+    background: #c0392b;
+    border-color: #e74c3c;
+}
+
+.celda.mina-revelada {
+    background: #2c2c4e;
+    border-color: #444;
+    cursor: default;
+}
+
+/* Colores por número de minas adyacentes */
+.n1 { color: #5dade2; }
+.n2 { color: #2ecc71; }
+.n3 { color: #e74c3c; }
+.n4 { color: #9b59b6; }
+.n5 { color: #e67e22; }
+.n6 { color: #1abc9c; }
+.n7 { color: #f1c40f; }
+.n8 { color: #ecf0f1; }
+
+#mensaje-estado {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    min-height: 2rem;
+    margin: 8px 0;
+    color: #f1c40f;
+}

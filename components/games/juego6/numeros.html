@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="numeros.css" type="text/css" rel="stylesheet">
+    <title>Adivina el Número</title>
+</head>
+<body>
+    <div id="menu">
+        <button onclick="ajustarDificultad('1')">Fácil</button>
+        <button onclick="ajustarDificultad('2')">Normal</button>
+        <button onclick="ajustarDificultad('3')">Difícil</button>
+        <button id="btn-reiniciar" onclick="reiniciarJuego()">Reiniciar</button>
+    </div>
+
+    <div id="info">
+        <span>Tiempo: <b id="tiempo">0</b>s</span>
+        <span>Intentos: <b id="intentos">0</b></span>
+        <span>Restantes: <b id="restantes">0</b></span>
+        <span>Puntos: <b id="puntos">0</b></span>
+    </div>
+
+    <div id="zona-juego">
+        <div id="rango-info">Adivina el número entre <b id="rango-min">1</b> y <b id="rango-max">200</b></div>
+
+        <div id="zona-input">
+            <input type="number" id="campo-numero" placeholder="?" min="1">
+            <button id="btn-adivinar" onclick="comprobarIntento()">Adivinar</button>
+        </div>
+
+        <div id="mensaje-pista"></div>
+        <div id="historial"></div>
+    </div>
+
+    <script src="numeros.js"></script>
+</body>
+</html>
