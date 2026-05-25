@@ -13,7 +13,7 @@
           <div class="d-flex justify-space-between align-center mb-6">
             <h3 class="text-h5 font-weight-bold">{{ $t('admin.users.title') }}</h3>
             <v-text-field
-              v-model="searchUsuarios"
+              v-model="searchUsers"
               append-icon="mdi-magnify"
               :label="$t('admin.users.search')"
               single-line
@@ -27,30 +27,30 @@
           </div>
 
           <v-data-table
-            :headers="headersUsuarios"
-            :items="usuarios"
-            :search="searchUsuarios"
+            :headers="headersUsers"
+            :items="users"
+            :search="searchUsers"
             class="transparent-table"
             hide-default-footer
             disable-pagination
           >
-            <template v-slot:[`item.estado`]="{ item }">
+            <template v-slot:[`item.status`]="{ item }">
               <v-chip
-                :color="item.estado === 'Activo' ? 'green darken-1' : 'red darken-1'"
+                :color="item.status === 'Activo' ? 'green darken-1' : 'red darken-1'"
                 text-color="white"
                 small
                 class="font-weight-bold"
               >
-                {{ $t('admin.status.' + item.estado.toLowerCase()) }}
+                {{ $t('admin.status.' + item.status.toLowerCase()) }}
               </v-chip>
             </template>
-            <template v-slot:[`item.acciones`]="{ item }">
-              <v-btn icon small class="mr-2" @click="abrirEditorUsuario(item)">
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-btn icon small class="mr-2" @click="openUserEditor(item)">
                 <v-icon color="black">mdi-pencil</v-icon>
               </v-btn>
-              <v-btn icon small @click="banearUsuario(item)">
-                <v-icon :color="item.estado === 'Activo' ? 'red' : 'green'">
-                  {{ item.estado === 'Activo' ? 'mdi-cancel' : 'mdi-check-circle' }}
+              <v-btn icon small @click="banUser(item)">
+                <v-icon :color="item.status === 'Activo' ? 'red' : 'green'">
+                  {{ item.status === 'Activo' ? 'mdi-cancel' : 'mdi-check-circle' }}
                 </v-icon>
               </v-btn>
             </template>
@@ -67,15 +67,15 @@
           </div>
 
           <v-data-table
-            :headers="headersJuegos"
-            :items="juegos"
+            :headers="headersGames"
+            :items="games"
             class="transparent-table"
             hide-default-footer
             disable-pagination
           >
-            <template v-slot:[`item.imagen`]="{ item }">
+            <template v-slot:[`item.image`]="{ item }">
               <v-avatar size="40" rounded class="my-2">
-                <v-img :src="obtenerImagen(item.imagen)" style="background-color: #757575;"></v-img>
+                <v-img :src="getImage(item.image)" style="background-color: #757575;"></v-img>
               </v-avatar>
             </template>
             <template v-slot:[`item.visible`]="{ item }">
@@ -83,11 +83,11 @@
                 {{ item.visible ? 'mdi-eye' : 'mdi-eye-off' }}
               </v-icon>
             </template>
-            <template v-slot:[`item.acciones`]="{ item }">
-              <v-btn icon small class="mr-2" @click="abrirEditorJuego(item)">
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-btn icon small class="mr-2" @click="openGameEditor(item)">
                 <v-icon color="black">mdi-pencil</v-icon>
               </v-btn>
-              <v-btn icon small @click="eliminarJuego(item)">
+              <v-btn icon small @click="deleteGame(item)">
                 <v-icon color="red">mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -97,15 +97,15 @@
     </v-sheet>
 
     <AdminDialogUsuario 
-      v-model="dialogUsuario" 
-      :usuario="usuarioSeleccionado" 
-      @guardar="actualizarUsuario" 
+      v-model="dialogUser" 
+      :user="selectedUser" 
+      @save="updateUser" 
     />
 
     <AdminDialogJuego 
-      v-model="dialogJuego" 
-      :juego="juegoSeleccionado" 
-      @guardar="actualizarJuego" 
+      v-model="dialogGame" 
+      :game="selectedGame" 
+      @save="updateGame" 
     />
   </v-container>
 </template>
@@ -124,72 +124,72 @@ export default {
   data() {
     return {
       tab: 0,
-      searchUsuarios: '',
-      dialogUsuario: false,
-      dialogJuego: false,
-      usuarioSeleccionado: {},
-      juegoSeleccionado: {},
+      searchUsers: '',
+      dialogUser: false,
+      dialogGame: false,
+      selectedUser: {},
+      selectedGame: {},
       
-      usuarios: [
-        { id: 1, nombre: 'NachoTrabaja', email: 'nacho@ejemplo.com', nivel: 12, estado: 'Activo' },
-        { id: 2, nombre: 'GamerPro99', email: 'gamerpro@ejemplo.com', nivel: 45, estado: 'Activo' },
-        { id: 3, nombre: 'ToxicPlayer', email: 'toxic@ejemplo.com', nivel: 8, estado: 'Baneado' }
+      users: [
+        { id: 1, name: 'NachoTrabaja', email: 'nacho@ejemplo.com', level: 12, status: 'Activo' },
+        { id: 2, name: 'GamerPro99', email: 'gamerpro@ejemplo.com', level: 45, status: 'Activo' },
+        { id: 3, name: 'ToxicPlayer', email: 'toxic@ejemplo.com', level: 8, status: 'Baneado' }
       ],
       
-      juegos: [
-        { id: 1, nombre: 'Buscaminas Pro', imagen: 'buscaminas.jpeg', visible: true },
-        { id: 2, nombre: 'Pokemon', imagen: 'pokemon.jpg', visible: true },
-        { id: 3, nombre: 'Pixel Runner', imagen: 'pixel-runner.png', visible: false }
+      games: [
+        { id: 1, name: 'Buscaminas Pro', image: 'buscaminas.jpeg', visible: true },
+        { id: 2, name: 'Pokemon', image: 'pokemon.jpg', visible: true },
+        { id: 3, name: 'Pixel Runner', image: 'pixel-runner.png', visible: false }
       ]
     }
   },
   computed: {
-    headersUsuarios() {
+    headersUsers() {
       return [
         { text: this.$t('admin.users.headers.id'), value: 'id', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: this.$t('admin.users.headers.name'), value: 'nombre', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.users.headers.name'), value: 'name', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: this.$t('admin.users.headers.email'), value: 'email', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: this.$t('admin.users.headers.level'), value: 'nivel', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: this.$t('admin.users.headers.status'), value: 'estado', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: this.$t('admin.users.headers.actions'), value: 'acciones', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
+        { text: this.$t('admin.users.headers.level'), value: 'level', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.users.headers.status'), value: 'status', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.users.headers.actions'), value: 'actions', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
       ];
     },
-    headersJuegos() {
+    headersGames() {
       return [
         { text: this.$t('admin.games.headers.id'), value: 'id', class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: this.$t('admin.games.headers.banner'), value: 'imagen', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text' },
-        { text: this.$t('admin.games.headers.name'), value: 'nombre', class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.games.headers.banner'), value: 'image', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text' },
+        { text: this.$t('admin.games.headers.name'), value: 'name', class: 'text-subtitle-1 font-weight-bold black--text' },
         { text: this.$t('admin.games.headers.visibility'), value: 'visible', class: 'text-subtitle-1 font-weight-bold black--text text-center', align: 'center' },
-        { text: this.$t('admin.games.headers.actions'), value: 'acciones', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
+        { text: this.$t('admin.games.headers.actions'), value: 'actions', sortable: false, class: 'text-subtitle-1 font-weight-bold black--text text-right', align: 'right' }
       ];
     }
   },
   methods: {
-    obtenerImagen(nombreArchivo) {
+    getImage(fileName) {
       try {
-        return require(`@/assets/banners/${nombreArchivo}`);
+        return require(`@/assets/banners/${fileName}`);
       } catch (e) {
         return null;
       }
     },
-    abrirEditorUsuario(usuario) {
-      this.usuarioSeleccionado = usuario;
-      this.dialogUsuario = true;
+    openUserEditor(user) {
+      this.selectedUser = user;
+      this.dialogUser = true;
     },
-    actualizarUsuario(datosNuevos) {
-      const index = this.usuarios.findIndex(u => u.id === datosNuevos.id);
+    updateUser(newData) {
+      const index = this.users.findIndex(u => u.id === newData.id);
       if (index !== -1) {
-        this.$set(this.usuarios, index, datosNuevos);
+        this.$set(this.users, index, newData);
       }
       Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: this.$t('admin.toast.user_updated'), showConfirmButton: false, timer: 1500 });
     },
-    banearUsuario(usuario) {
-      const isActivo = usuario.estado === 'Activo';
-      const color = isActivo ? '#d33' : '#4CAF50';
+    banUser(user) {
+      const isActive = user.status === 'Activo';
+      const color = isActive ? '#d33' : '#4CAF50';
       
       Swal.fire({
         title: this.$t('admin.swal.ban.title'),
-        text: isActivo ? this.$t('admin.swal.ban.text_ban', { name: usuario.nombre }) : this.$t('admin.swal.ban.text_unban', { name: usuario.nombre }),
+        text: isActive ? this.$t('admin.swal.ban.text_ban', { name: user.name }) : this.$t('admin.swal.ban.text_unban', { name: user.name }),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: color,
@@ -199,30 +199,30 @@ export default {
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          usuario.estado = isActivo ? 'Baneado' : 'Activo';
+          user.status = isActive ? 'Baneado' : 'Activo';
           Swal.fire(
             this.$t('admin.swal.success_title'), 
-            isActivo ? this.$t('admin.swal.ban.success_ban') : this.$t('admin.swal.ban.success_unban'), 
+            isActive ? this.$t('admin.swal.ban.success_ban') : this.$t('admin.swal.ban.success_unban'), 
             'success'
           );
         }
       });
     },
-    abrirEditorJuego(juego) {
-      this.juegoSeleccionado = juego;
-      this.dialogJuego = true;
+    openGameEditor(game) {
+      this.selectedGame = game;
+      this.dialogGame = true;
     },
-    actualizarJuego(datosNuevos) {
-      const index = this.juegos.findIndex(j => j.id === datosNuevos.id);
+    updateGame(newData) {
+      const index = this.games.findIndex(g => g.id === newData.id);
       if (index !== -1) {
-        this.$set(this.juegos, index, datosNuevos);
+        this.$set(this.games, index, newData);
       }
       Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: this.$t('admin.toast.game_updated'), showConfirmButton: false, timer: 1500 });
     },
-    eliminarJuego(juego) {
+    deleteGame(game) {
       Swal.fire({
         title: this.$t('admin.swal.delete_game.title'),
-        text: this.$t('admin.swal.delete_game.text', { name: juego.nombre }),
+        text: this.$t('admin.swal.delete_game.text', { name: game.name }),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -232,8 +232,8 @@ export default {
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          const index = this.juegos.indexOf(juego);
-          this.juegos.splice(index, 1);
+          const index = this.games.indexOf(game);
+          this.games.splice(index, 1);
           Swal.fire(
             this.$t('admin.swal.delete_game.success_title'), 
             this.$t('admin.swal.delete_game.success_text'), 

@@ -10,9 +10,9 @@
         {{ $t('register.title') }}
       </h2>
 
-      <v-form @submit.prevent="registrar">
+      <v-form @submit.prevent="register">
         <v-text-field
-          v-model="nombre"
+          v-model="name"
           :placeholder="$t('register.name_placeholder')"
           solo
           flat
@@ -44,7 +44,7 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="confirmarPassword"
+          v-model="confirmPassword"
           :placeholder="$t('register.confirm_password_placeholder')"
           type="password"
           solo
@@ -81,17 +81,17 @@
 
 <script>
 export default {
-  name: 'Registro',
+  name: 'RegisterPage',
   data() {
     return {
-      nombre: '',
+      name: '',
       email: '',
       password: '',
-      confirmarPassword: ''
+      confirmPassword: ''
     }
   },
   methods: {
-    registrar() {
+    register() {
     }
   }
 }

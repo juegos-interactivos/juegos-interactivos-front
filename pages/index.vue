@@ -48,7 +48,7 @@
 
 <script>
 export default {
-  name: 'PaginaInicio',
+  name: 'HomePage',
   computed: {
     features() {
       return [

@@ -60,20 +60,20 @@
           v-on="on"
         >
           <v-icon left color="black">mdi-translate</v-icon>
-          {{ idiomaActual }}
+          {{ currentLanguage }}
         </v-btn>
       </template>
       
       <v-list color="#9e9e9e" class="rounded-xl pa-2 shadow-custom">
         <v-list-item 
-          @click="cambiarIdioma('es')" 
+          @click="changeLanguage('es')" 
           class="rounded-lg mb-1" 
           :class="{'active-lang': $i18n.locale === 'es'}"
         >
           <v-list-item-title class="font-weight-bold text-center black--text">ES</v-list-item-title>
         </v-list-item>
         <v-list-item 
-          @click="cambiarIdioma('en')" 
+          @click="changeLanguage('en')" 
           class="rounded-lg" 
           :class="{'active-lang': $i18n.locale === 'en'}"
         >
@@ -86,20 +86,20 @@
 
 <script>
 export default {
+  name: 'DefaultLayout',
   data() {
     return {
       search: ''
     }
   },
   computed: {
-    idiomaActual() {
-      // Retorna el idioma actual en mayúsculas (ES o EN)
+    currentLanguage() {
       return this.$i18n.locale ? this.$i18n.locale.toUpperCase() : 'ES';
     }
   },
   watch: {
-    search(nuevoValor) {
-      this.$nuxt.$emit('buscar-juego', nuevoValor);
+    search(newValue) {
+      this.$nuxt.$emit('search-game', newValue);
     },
     $route(to) {
       if (to.path !== '/juegos') {
@@ -108,14 +108,12 @@ export default {
     }
   },
   methods: {
-    cambiarIdioma(codigo) {
-      if (this.$i18n.locale !== codigo) {
-        // En Nuxt-i18n, se recomienda usar setLocale()
+    changeLanguage(code) {
+      if (this.$i18n.locale !== code) {
         if (typeof this.$i18n.setLocale === 'function') {
-          this.$i18n.setLocale(codigo);
+          this.$i18n.setLocale(code);
         } else {
-          // Fallback para configuraciones más sencillas de vue-i18n
-          this.$i18n.locale = codigo;
+          this.$i18n.locale = code;
         }
       }
     }
@@ -144,7 +142,6 @@ export default {
   margin-right: 24px;
 }
 
-/* Estilos del selector de idiomas flotante */
 .lang-selector {
   position: fixed;
   bottom: 24px;

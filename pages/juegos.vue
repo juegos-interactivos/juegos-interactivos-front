@@ -60,7 +60,7 @@
 
 <script>
 export default {
-  name: 'PaginaJuegos',
+  name: 'GamesPage',
   data() {
     return {
       searchQuery: '',
@@ -93,12 +93,12 @@ export default {
     }
   },
   mounted() {
-    this.$nuxt.$on('buscar-juego', (termino) => {
+    this.$nuxt.$on('search-game', (termino) => {
       this.searchQuery = termino;
     });
   },
   beforeDestroy() {
-    this.$nuxt.$off('buscar-juego');
+    this.$nuxt.$off('search-game');
   },
   methods: {
     marcarFavorito(id) {

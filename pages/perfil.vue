@@ -20,10 +20,10 @@
             </v-sheet>
           </div>
 
-          <div class="text-h6 text-center mb-8">{{ perfil.nombre }}</div>
-          <div class="text-body-1 mb-4">{{ $t('perfil.nivel') }}: {{ perfil.nivel }}</div>
-          <div class="text-body-1 mb-4">{{ $t('perfil.usuario_desde') }}: {{ perfil.fechaRegistro }}</div>
-          <div class="text-body-1 mb-auto">{{ $t('perfil.mejor_record') }}: {{ perfil.mejorRecord }}</div>
+          <div class="text-h6 text-center mb-8">{{ profile.name }}</div>
+          <div class="text-body-1 mb-4">{{ $t('perfil.nivel') }}: {{ profile.level }}</div>
+          <div class="text-body-1 mb-4">{{ $t('perfil.usuario_desde') }}: {{ profile.registrationDate }}</div>
+          <div class="text-body-1 mb-auto">{{ $t('perfil.mejor_record') }}: {{ profile.bestRecord }}</div>
 
           <div class="text-center mt-8">
             <v-menu top offset-y rounded="lg">
@@ -39,15 +39,15 @@
               </template>
 
               <v-list>
-                <v-list-item @click="accionAjustes('cambiar_nombre')">
+                <v-list-item @click="settingsAction('change_name')">
                   <v-list-item-title>{{ $t('perfil.menu.cambiar_nombre') }}</v-list-item-title>
                 </v-list-item>
                 
-                <v-list-item @click="accionAjustes('eliminar_record')">
+                <v-list-item @click="settingsAction('delete_record')">
                   <v-list-item-title>{{ $t('perfil.menu.eliminar_record') }}</v-list-item-title>
                 </v-list-item>
                 
-                <v-list-item @click="accionAjustes('borrar_cuenta')">
+                <v-list-item @click="settingsAction('delete_account')">
                   <v-list-item-title class="red--text font-weight-bold">{{ $t('perfil.menu.borrar_cuenta') }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -77,11 +77,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(juego, i) in rankings" :key="i">
-                    <td class="text-h6 font-weight-regular pt-4 pb-4">{{ juego.nombre }}</td>
-                    <td class="text-h6 font-weight-regular pt-4 pb-4">{{ juego.puesto }}</td>
-                    <td class="text-center text-h6 font-weight-regular pt-4 pb-4">{{ juego.puntuacion }}</td>
-                    <td class="text-right text-h6 font-weight-regular pt-4 pb-4">{{ juego.tiempo }}</td>
+                  <tr v-for="(game, i) in rankings" :key="i">
+                    <td class="text-h6 font-weight-regular pt-4 pb-4">{{ game.name }}</td>
+                    <td class="text-h6 font-weight-regular pt-4 pb-4">{{ game.rank }}</td>
+                    <td class="text-center text-h6 font-weight-regular pt-4 pb-4">{{ game.score }}</td>
+                    <td class="text-right text-h6 font-weight-regular pt-4 pb-4">{{ game.time }}</td>
                   </tr>
                 </tbody>
               </template>
@@ -99,26 +99,27 @@
 import Swal from 'sweetalert2';
 
 export default {
+  name: 'ProfilePage',
   data() {
     return {
-      perfil: {
-        nombre: 'NachoTrabaja',
-        nivel: 12,
-        fechaRegistro: '12/05/2021',
-        mejorRecord: '4200 (Buscaminas)'
+      profile: {
+        name: 'NachoTrabaja',
+        level: 12,
+        registrationDate: '12/05/2021',
+        bestRecord: '4200 (Buscaminas)'
       },
       rankings: [
-        { nombre: 'Buscaminas', puesto: '140', puntuacion: '4200', tiempo: '11:30' },
-        { nombre: 'Juego y', puesto: 'Puesto', puntuacion: 'Puntuación', tiempo: 'Tiempo' },
-        { nombre: 'Juego z', puesto: 'Puesto', puntuacion: 'Puntuación', tiempo: 'Tiempo' }
+        { name: 'Buscaminas', rank: '140', score: '4200', time: '11:30' },
+        { name: 'Juego y', rank: 'Puesto', score: 'Puntuación', time: 'Tiempo' },
+        { name: 'Juego z', rank: 'Puesto', score: 'Puntuación', time: 'Tiempo' }
       ]
     }
   },
   methods: {
-    accionAjustes(accion) {
-      if (accion === 'cambiar_nombre') {
-      } else if (accion === 'eliminar_record') {
-      } else if (accion === 'borrar_cuenta') {
+    settingsAction(action) {
+      if (action === 'change_name') {
+      } else if (action === 'delete_record') {
+      } else if (action === 'delete_account') {
         Swal.fire({
           title: this.$t('perfil.swal.borrar_titulo'),
           text: this.$t('perfil.swal.borrar_texto'),
