@@ -1,22 +1,25 @@
 <template>
-  <v-app>
+  <v-app style="background-color: #f4f7f6;">
     <v-container fluid class="fill-height d-flex flex-column justify-center align-center pa-4">
       <v-sheet
-        color="#9e9e9e"
+        color="white"
         class="rounded-xl pa-10 d-flex flex-column align-center text-center shadow-custom"
         max-width="500"
         width="100%"
       >
-        <v-icon size="80" color="black" class="mb-6">mdi-alert-circle-outline</v-icon>
+        <div class="icon-wrapper mb-6 d-flex justify-center align-center">
+          <v-icon size="60" color="#ef4444">mdi-alert-circle-outline</v-icon>
+        </div>
         
-        <h1 class="text-h4 font-weight-bold black--text mb-8">
+        <h1 class="text-h4 font-weight-bold mb-8" style="color: #2c3e50;">
           {{ error.statusCode === 404 ? $t('error.page_not_found') : $t('error.other_error') }}
         </h1>
         
         <v-btn
-          color="black"
-          class="white--text font-weight-bold rounded-pill px-8"
-          elevation="0"
+          color="#10b981"
+          class="white--text font-weight-bold rounded-pill px-8 transition-swing error-btn"
+          elevation="4"
+          height="52"
           to="/"
         >
           {{ $t('error.home_page') }}
@@ -49,6 +52,22 @@ export default {
 
 <style scoped>
 .shadow-custom {
-  box-shadow: 0px 4px 15px rgba(0,0,0,0.15) !important;
+  box-shadow: 0px 8px 25px rgba(16, 185, 129, 0.1) !important;
+}
+
+.icon-wrapper {
+  width: 100px;
+  height: 100px;
+  background-color: #fee2e2;
+  border-radius: 50%;
+}
+
+.error-btn {
+  letter-spacing: 0.5px;
+}
+
+.error-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 20px rgba(16, 185, 129, 0.3) !important;
 }
 </style>

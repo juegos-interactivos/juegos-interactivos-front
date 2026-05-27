@@ -6,7 +6,7 @@ export default {
     profile: 'Perfil',
     login: 'Inicia Sesión',
     admin: 'Panel de administración',
-    lang_changed: 'Idioma actualizado'
+    lang_changed: 'Language updated'
   },
   index: {
     welcome_title: 'Bienvenido a G de Juegos',

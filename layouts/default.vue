@@ -4,7 +4,7 @@
       <nuxt-link to="/" class="d-flex align-center text-decoration-none">
         <img src="~/assets/sweetpea.png" alt="Logo" height="60" class="mr-3" />
         <div class="font-italic font-weight-bold text-h6" style="line-height: 1.2; color: #10b981;">
-          Nombre en<br>progreso
+          G de<br>Juegos
         </div>
       </nuxt-link>
 
