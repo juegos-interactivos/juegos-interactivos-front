@@ -1,92 +1,108 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-  >
-    <v-flex
-      xs12
-      sm8
-      md6
+  <v-container fluid class="pa-4 pa-md-8">
+    <v-sheet 
+      color="white" 
+      class="rounded-xl pa-8 pa-md-16 text-center shadow-custom mb-10 d-flex flex-column justify-center align-center" 
+      min-height="450"
     >
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
+      <h1 class="text-h3 text-md-h2 font-weight-bold mb-6" style="color: #10b981;">
+        {{ $t('index.welcome_title') }}
+      </h1>
+      
+      <p class="text-h6 text-md-h5 mb-10" style="max-width: 700px; color: #2c3e50;">
+        {{ $t('index.welcome_desc') }}
+      </p>
+      
+      <v-btn 
+        color="#10b981" 
+        class="white--text font-weight-bold text-h6 rounded-pill px-10 py-6 explore-btn transition-swing" 
+        elevation="4" 
+        to="/juegos"
+      >
+        {{ $t('index.explore_btn') }}
+      </v-btn>
+    </v-sheet>
+
+    <v-row>
+      <v-col cols="12" md="4" v-for="(feature, i) in features" :key="i">
+        <v-card 
+          color="white" 
+          class="rounded-xl pa-8 text-center shadow-custom feature-card transition-swing" 
+          elevation="0" 
+          height="100%"
+        >
+          <div class="icon-wrapper mb-6 mx-auto d-flex justify-center align-center">
+            <v-icon size="40" color="#10b981">
+              {{ feature.icon }}
+            </v-icon>
           </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+          <h3 class="text-h5 font-weight-bold mb-3" style="color: #2c3e50;">
+            {{ feature.title }}
+          </h3>
+          <p class="text-body-1 mb-0" style="color: #64748b;">
+            {{ feature.desc }}
+          </p>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
+  name: 'HomePage',
+  computed: {
+    features() {
+      return [
+        { 
+          icon: 'mdi-gamepad-variant', 
+          title: this.$t('index.features.play_now.title'), 
+          desc: this.$t('index.features.play_now.desc') 
+        },
+        { 
+          icon: 'mdi-trophy', 
+          title: this.$t('index.features.compete.title'), 
+          desc: this.$t('index.features.compete.desc') 
+        },
+        { 
+          icon: 'mdi-heart', 
+          title: this.$t('index.features.favorites.title'), 
+          desc: this.$t('index.features.favorites.desc') 
+        }
+      ]
+    }
   }
 }
 </script>
+
+<style scoped>
+.shadow-custom {
+  box-shadow: 0px 8px 20px rgba(16, 185, 129, 0.1) !important;
+}
+
+.feature-card {
+  cursor: default;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0px 12px 25px rgba(16, 185, 129, 0.2) !important;
+}
+
+.icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background-color: #e6f8f1;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover .icon-wrapper {
+  transform: scale(1.1);
+}
+
+.explore-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 25px rgba(16, 185, 129, 0.4) !important;
+}
+</style>
